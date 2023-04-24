@@ -1,7 +1,13 @@
 ```{r settings}
 #| include: false
-library(tidyverse)
 library(glue)
+library(ggplot2)
+library(scales)
+library(tidyr)
+library(dplyr)
+library(jsonlite)
+library(readr)
+
 theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(
     "#464343", "#E69F00", "#56B4E9", "#009E73",
@@ -44,8 +50,6 @@ rm(taxasDE)
 
 ```{r loadFunctions}
 #| include: false
-
-
 loadObs <- function(projectId){
    tryCatch(
      exp = {
