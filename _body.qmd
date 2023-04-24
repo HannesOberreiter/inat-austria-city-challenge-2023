@@ -1,14 +1,14 @@
 
 ```{r statsDistinct}
 if(!is.null(obsResults)){
-  distinctObserver <- obsResults$user.name %>% unique()
+  distinctObserver <- obsResults$user.id %>% unique()
   distinctSpecies <- obsResults %>% 
     filter(taxonRank == 'species' | taxonRank == 'subspecies') %>%
     pull(scientificName) %>%
     unique(.)
 
   statsObserver <- obsResults %>% 
-    count(user.name) %>%
+    count(user.id) %>%
     summarise(
         mean = round(mean(n), 1),
         median = median(n),
@@ -34,9 +34,9 @@ if(!is.null(obsResults)){
 ```{r tableTopObserver}
 if(!is.null(obsResults)){
   obsResults %>% 
-    count(user.name) %>% 
+    count(user.id, user.name) %>% 
     slice_max(n = 10, order_by = n) %>%
-    select('#' = n, 'Name' = user.name)
+    select('#' = n, 'Beobachter' = user.name, 'UserId' = user.id)
 } else {
   print('Noch keine Beobachtungen')
 }
@@ -105,6 +105,7 @@ if(!is.null(obsResults)){
 if(!is.null(obsResults)){
   obsResults %>% 
     count(phylum) %>% 
+    drop_na(phylum) %>% 
     arrange(desc(n)) %>%
     mutate(
       np = n / nrow(obsResults)
