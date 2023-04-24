@@ -7,6 +7,7 @@ website:
   description: "Auswertungen und Analyse für die iNaturalist City Nature Challenge in Österreich."
   repo-url: "https://github.com/HannesOberreiter/inat-austria-city-challenge-2023"
   repo-actions: "edit"
+  favicon: "favicon.png"
   navbar:
     left:
       - file: index.qmd
