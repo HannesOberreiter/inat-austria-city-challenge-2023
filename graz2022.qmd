@@ -5,11 +5,11 @@ execute:
   echo: false
   waring: false
   error: false
-order: 1
+order: 2
 format:
     html:
         df-print: paged
-date-modified: '`r Sys.time()`'
+date: last-modified
 date-format: "YYYY-MM-DDTHH:mm:ssZ"
 ---
 
@@ -22,7 +22,6 @@ date-format: "YYYY-MM-DDTHH:mm:ssZ"
 #| include: false
 
 projectId <- "121977" # Graz, 2022
-#projectId <- "27173" # beehive-fauna testing
 obsResults <- loadObs(projectId)
 
 ```
