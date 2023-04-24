@@ -1,7 +1,6 @@
 ---
 title: "City Nature Challenge 2023: Graz bis Tierwelt Herberstein"
 lang: 'de-AT'
-date: "2023"
 execute:
   echo: false
   waring: false
@@ -11,6 +10,7 @@ format:
     html:
         df-print: paged
 date-modified: '`r Sys.Date()`'
+date-format: "YYYY-MM-DDTHH:mm:ssZ"
 ---
 
 ## iNaturalist
