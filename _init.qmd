@@ -59,7 +59,7 @@ loadObs <- function(projectId){
       perPage <- 200
       totalPages <- ceiling(totalResults / perPage)
       obsList <- list()
-      fields <- "(uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t,id:!t),taxon:(id:!t))"
+      fields <- "(uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t,id:!t,login:!t),taxon:(id:!t))"
       for (x in 1:totalPages) {
         Sys.sleep(1)
         print(glue("Fetching page {x} from {totalPages}"))
