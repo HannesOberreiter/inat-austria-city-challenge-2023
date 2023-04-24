@@ -87,6 +87,9 @@ loadObs <- function(projectId){
 
       obsResults <- bind_rows(obsList) %>%
         left_join(taxas, by = c("taxon.id" = "id")) %>% 
+        mutate(
+          user.name = ifelse(is.na(user.name), user.login, user.name)
+        ) %>%
         distinct(uuid, .keep_all = TRUE)
       return(obsResults)
      },
