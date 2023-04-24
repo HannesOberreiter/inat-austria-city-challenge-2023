@@ -7,6 +7,7 @@ library(tidyr)
 library(dplyr)
 library(jsonlite)
 library(readr)
+library(stringr)
 
 theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(
@@ -37,10 +38,9 @@ birdsList <- read_csv2("data/birds.csv") %>%
 # German Common Names
 taxasDE <- read_csv('data/VernacularNames-german.csv') %>% 
     group_by(id) %>% 
-    mutate(
-      vernacularName = paste(vernacularName, collapse = ', ')
-    ) %>% 
-    ungroup()
+    summarise(
+      vernacularName = paste(vernacularName, collapse = ', ') %>% stringr::str_trunc(35)
+    )
 # Full Taxon Tree Names
 taxas <- read_csv('data/taxa.csv') %>% 
     left_join(taxasDE, by = "id") %>% 
@@ -50,47 +50,61 @@ rm(taxasDE)
 
 ```{r loadFunctions}
 #| include: false
-loadObs <- function(projectId){
+loadObs <- function(projectId, maxLoops = 200){
    tryCatch(
      exp = {
-      getPagesUrl <- glue("https://api.inaturalist.org/v1/observations?project_id={projectId}&locale=de&order=desc&order_by=created_at&per_page=1&only_id=true")
-      getPagesFetch <- jsonlite::fromJSON(getPagesUrl)
-      totalResults <- getPagesFetch$total_results
+       
+      apiEndpoint <- "https://api.inaturalist.org/v2/observations"
+      fields <- "(id:!t,uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t,id:!t,login:!t),taxon:(id:!t))"
       perPage <- 200
-      totalPages <- ceiling(totalResults / perPage)
+      staticQuery <- glue("project_id={projectId}&order=asc&order_by=id&per_page={perPage}&fields={fields}")
+      
+      aboveId <- 1
       obsList <- list()
-      fields <- "(uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t,id:!t,login:!t),taxon:(id:!t))"
-      for (x in 1:totalPages) {
+      loopCounter <- 1
+      while (aboveId > 0) {
         Sys.sleep(1)
-        print(glue("Fetching page {x} from {totalPages}"))
-        # Dirty workaround for the moment
-        # https://github.com/inaturalist/iNaturalistAPI/issues/379
-        # maybe separate into phylums to not run into limit issue as 100 would be again problematic
-        if(x < 50){
-          nextPage <- x
-          direction <- "desc"
-        } else if(x > 100){
-          print('Too many observations')
+        
+        obsUrl <- glue("{apiEndpoint}?{staticQuery}&id_above={aboveId}")
+        print(obsUrl)
+        obsFetch <- jsonlite::fromJSON(obsUrl)
+        totalResults <- obsFetch$total_results
+        if(totalResults == 0){
+          print("Empty results")
           break;
-        } else {
-          nextPage <- x - 50
-          direction <- "asc"
         }
         
-        #obsUrl <- glue::glue("https://api.inaturalist.org/v1/observations?project_id={projectId}&locale=de&order=desc&order_by=created_at&per_page={perPage}&page={nextPage}")
-        obsUrl <- glue("https://api.inaturalist.org/v2/observations?project_id={projectId}&order=desc&order_by=id&per_page={perPage}&page={nextPage}&fields={fields}")
-
-        obsFetch <- jsonlite::fromJSON(obsUrl)
         obsTempResults <- obsFetch$results %>% unnest(c(taxon, user), names_sep = ".")
-        obsList[[x]] <- obsTempResults
+        aboveId = max(obsTempResults$id)
+        obsList[[loopCounter]] <- obsTempResults
+        
+        if(totalResults <= perPage){
+          print("No more fetches needed")
+          break;
+        }
+        
+        print("Remaining Obs")
+        print(totalResults - perPage)
+        print("Loops to finish")
+        print((totalResults - perPage) / perPage)
+        print("Loops done")
+        print(loopCounter)
+        
+        if(loopCounter >= maxLoops){
+          print("Breaking early because max loop limit")
+          break;
+        }
+        
+        loopCounter <- loopCounter + 1
+        
       }
 
       obsResults <- bind_rows(obsList) %>%
         left_join(taxas, by = c("taxon.id" = "id")) %>% 
         mutate(
-          user.name = ifelse(is.na(user.name), user.login, user.name)
+          user.name = ifelse(is.na(user.name) | user.name == '', user.login, user.name)
         ) %>%
-        distinct(uuid, .keep_all = TRUE)
+        distinct(uuid, .keep_all = TRUE) # catch any possible double entries due to our loop logic
       return(obsResults)
      },
     error = function(e){
@@ -109,4 +123,3 @@ loadObs <- function(projectId){
   )
 }
 ```
-
