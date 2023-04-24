@@ -86,7 +86,8 @@ loadObs <- function(projectId){
       }
 
       obsResults <- bind_rows(obsList) %>%
-        left_join(taxas, by = c("taxon.id" = "id"))
+        left_join(taxas, by = c("taxon.id" = "id")) %>% 
+        distinct(uuid, .keep_all = TRUE)
       return(obsResults)
      },
     error = function(e){
