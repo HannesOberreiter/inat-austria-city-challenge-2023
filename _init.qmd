@@ -65,6 +65,7 @@ loadObs <- function(projectId){
         print(glue("Fetching page {x} from {totalPages}"))
         # Dirty workaround for the moment
         # https://github.com/inaturalist/iNaturalistAPI/issues/379
+        # maybe separate into phylums to not run into limit issue as 100 would be again problematic
         if(x < 50){
           nextPage <- x
           direction <- "desc"
