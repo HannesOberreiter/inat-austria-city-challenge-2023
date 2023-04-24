@@ -1,0 +1,43 @@
+---
+title: "City Nature Challenge 2023: Graz bis Tierwelt Herberstein"
+lang: 'de-AT'
+date: "2023"
+execute:
+  echo: false
+  waring: false
+  error: false
+order: 1
+format:
+    html:
+        df-print: paged
+date-modified: '`r Sys.Date()`'
+---
+
+## iNaturalist
+
+- [www.inaturalist.org/home](https://www.inaturalist.org/home)
+- [Projekt Seite](https://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei)
+
+### Projekt Beschreibung
+
+Graz und seine Umgebung zählen zu den artenreichsten Gebieten Mitteleuropas. Dies konnten wir mit den Europatiteln in Bezug auf registrierte Arten in den letzten zwei Jahren der CNC beweisen. Die Tierwelt Herberstein & das Euroaschutzgebiet Feistritzklamm wiederum, ist in Bezug auf Käfer mit über 2.224 registrierten Arten das, derzeit artenreichste Käferparadies Europas. Die restliche Artenvielfalt ist größtenteils unzureichend untersucht. Hilf mit bei der Suche nach möglichst vielen Tier-, Pflanzen- & Pilzarten, um der restlichen Welt zu zeigen, welche Biodiversität von Graz bis Herberstein schlummert! JEDE BEOBACHTUNG ZÄHLT!!!
+
+### Letzten Ergebnisse
+
+- 2020: Beobachtungen: 5.098; Arten: >1320; BeobachterInnen: 121
+- 2021: Beobachtungen: 17.189; Arten: >2.529; BeobachterInnen: 230
+- 2022: Beobachtungen: 16.878; Arten: >2.820; BeobachterInnen: 196
+
+{{< include _init.qmd >}}
+
+
+```{r init}
+#| include: false
+
+projectId <- "148063" # Graz, 2023
+obsResults <- loadObs(projectId)
+
+```
+
+{{< include _body.qmd >}}
+

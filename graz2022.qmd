@@ -1,0 +1,31 @@
+---
+title: "City Nature Challenge 2022: Graz"
+lang: 'de-AT'
+date: "2022"
+execute:
+  echo: false
+  waring: false
+  error: false
+order: 1
+format:
+    html:
+        df-print: paged
+date-modified: '`r Sys.Date()`'
+---
+
+## Demo 2022
+
+{{< include _init.qmd >}}
+
+
+```{r init}
+#| include: false
+
+projectId <- "121977" # Graz, 2022
+projectId <- "27173" # beehive-fauna testing
+obsResults <- loadObs(projectId)
+
+```
+
+{{< include _body.qmd >}}
+
