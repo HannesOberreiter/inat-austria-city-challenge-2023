@@ -9,7 +9,7 @@ order: 1
 format:
     html:
         df-print: paged
-date-modified: '`r Sys.time()`'
+date: last-modified
 date-format: "YYYY-MM-DDTHH:mm:ssZ"
 ---
 
