@@ -1,5 +1,5 @@
 ---
-title: "Hannes Oberreiter"
+title: "About"
 order: 10
 about:
   template: jolla
@@ -15,4 +15,10 @@ about:
       href: https://github.com/HannesOberreiter
 ---
 
-pastime forestry and apiculture || spare time programmer || hobby biologist
+Auswertung der Österreichischen iNaturalist City Challenge.
+
+<hr/>
+
+Made by Hannes Oberreiter 
+
+*pastime forestry and apiculture || spare time programmer || hobby biologist*
