@@ -55,17 +55,29 @@ loadObs <- function(projectId){
       perPage <- 200
       totalPages <- ceiling(totalResults / perPage)
       obsList <- list()
-      fields <- "(uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t),taxon:(id:!t))"
+      fields <- "(uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t,id:!t),taxon:(id:!t))"
       for (x in 1:totalPages) {
         Sys.sleep(1)
         print(glue("Fetching page {x} from {totalPages}"))
-        nextPage <- x
+        # Dirty workaround for the moment
+        # https://github.com/inaturalist/iNaturalistAPI/issues/379
+        if(x < 50){
+          nextPage <- x
+          direction <- "desc"
+        } else if(x > 100){
+          print('Too many observations')
+          break;
+        } else {
+          nextPage <- x - 50
+          direction <- "asc"
+        }
+        
         #obsUrl <- glue::glue("https://api.inaturalist.org/v1/observations?project_id={projectId}&locale=de&order=desc&order_by=created_at&per_page={perPage}&page={nextPage}")
         obsUrl <- glue("https://api.inaturalist.org/v2/observations?project_id={projectId}&order=desc&order_by=id&per_page={perPage}&page={nextPage}&fields={fields}")
 
         obsFetch <- jsonlite::fromJSON(obsUrl)
         obsTempResults <- obsFetch$results %>% unnest(c(taxon, user), names_sep = ".")
-        obsList[[nextPage]] <- obsTempResults
+        obsList[[x]] <- obsTempResults
       }
 
       obsResults <- bind_rows(obsList) %>%
