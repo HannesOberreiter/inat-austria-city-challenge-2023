@@ -22,7 +22,7 @@ date-modified: '`r Sys.Date()`'
 #| include: false
 
 projectId <- "121977" # Graz, 2022
-projectId <- "27173" # beehive-fauna testing
+#projectId <- "27173" # beehive-fauna testing
 obsResults <- loadObs(projectId)
 
 ```
