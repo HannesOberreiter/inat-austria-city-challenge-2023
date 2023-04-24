@@ -254,6 +254,7 @@ window.document.addEventListener("DOMContentLoaded", function () {
 
 !function(t,n){"object"==typeof exports&&"undefined"!=typeof module?module.exports=n():"function"==typeof define&&define.amd?define(n):(t=t||self).Headroom=n()}(this,function(){"use strict";function t(){return"undefined"!=typeof window}function d(t){return function(t){return t&&t.document&&function(t){return 9===t.nodeType}(t.document)}(t)?function(t){var n=t.document,o=n.body,s=n.documentElement;return{scrollHeight:function(){return Math.max(o.scrollHeight,s.scrollHeight,o.offsetHeight,s.offsetHeight,o.clientHeight,s.clientHeight)},height:function(){return t.innerHeight||s.clientHeight||o.clientHeight},scrollY:function(){return void 0!==t.pageYOffset?t.pageYOffset:(s||o.parentNode||o).scrollTop}}}(t):function(t){return{scrollHeight:function(){return Math.max(t.scrollHeight,t.offsetHeight,t.clientHeight)},height:function(){return Math.max(t.offsetHeight,t.clientHeight)},scrollY:function(){return t.scrollTop}}}(t)}function n(t,s,e){var n,o=function(){var n=!1;try{var t={get passive(){n=!0}};window.addEventListener("test",t,t),window.removeEventListener("test",t,t)}catch(t){n=!1}return n}(),i=!1,r=d(t),l=r.scrollY(),a={};function c(){var t=Math.round(r.scrollY()),n=r.height(),o=r.scrollHeight();a.scrollY=t,a.lastScrollY=l,a.direction=l<t?"down":"up",a.distance=Math.abs(t-l),a.isOutOfBounds=t<0||o<t+n,a.top=t<=s.offset[a.direction],a.bottom=o<=t+n,a.toleranceExceeded=a.distance>s.tolerance[a.direction],e(a),l=t,i=!1}function h(){i||(i=!0,n=requestAnimationFrame(c))}var u=!!o&&{passive:!0,capture:!1};return t.addEventListener("scroll",h,u),c(),{destroy:function(){cancelAnimationFrame(n),t.removeEventListener("scroll",h,u)}}}function o(t){return t===Object(t)?t:{down:t,up:t}}function s(t,n){n=n||{},Object.assign(this,s.options,n),this.classes=Object.assign({},s.options.classes,n.classes),this.elem=t,this.tolerance=o(this.tolerance),this.offset=o(this.offset),this.initialised=!1,this.frozen=!1}return s.prototype={constructor:s,init:function(){return s.cutsTheMustard&&!this.initialised&&(this.addClass("initial"),this.initialised=!0,setTimeout(function(t){t.scrollTracker=n(t.scroller,{offset:t.offset,tolerance:t.tolerance},t.update.bind(t))},100,this)),this},destroy:function(){this.initialised=!1,Object.keys(this.classes).forEach(this.removeClass,this),this.scrollTracker.destroy()},unpin:function(){!this.hasClass("pinned")&&this.hasClass("unpinned")||(this.addClass("unpinned"),this.removeClass("pinned"),this.onUnpin&&this.onUnpin.call(this))},pin:function(){this.hasClass("unpinned")&&(this.addClass("pinned"),this.removeClass("unpinned"),this.onPin&&this.onPin.call(this))},freeze:function(){this.frozen=!0,this.addClass("frozen")},unfreeze:function(){this.frozen=!1,this.removeClass("frozen")},top:function(){this.hasClass("top")||(this.addClass("top"),this.removeClass("notTop"),this.onTop&&this.onTop.call(this))},notTop:function(){this.hasClass("notTop")||(this.addClass("notTop"),this.removeClass("top"),this.onNotTop&&this.onNotTop.call(this))},bottom:function(){this.hasClass("bottom")||(this.addClass("bottom"),this.removeClass("notBottom"),this.onBottom&&this.onBottom.call(this))},notBottom:function(){this.hasClass("notBottom")||(this.addClass("notBottom"),this.removeClass("bottom"),this.onNotBottom&&this.onNotBottom.call(this))},shouldUnpin:function(t){return"down"===t.direction&&!t.top&&t.toleranceExceeded},shouldPin:function(t){return"up"===t.direction&&t.toleranceExceeded||t.top},addClass:function(t){this.elem.classList.add.apply(this.elem.classList,this.classes[t].split(" "))},removeClass:function(t){this.elem.classList.remove.apply(this.elem.classList,this.classes[t].split(" "))},hasClass:function(t){return this.classes[t].split(" ").every(function(t){return this.classList.contains(t)},this.elem)},update:function(t){t.isOutOfBounds||!0!==this.frozen&&(t.top?this.top():this.notTop(),t.bottom?this.bottom():this.notBottom(),this.shouldUnpin(t)?this.unpin():this.shouldPin(t)&&this.pin())}},s.options={tolerance:{up:0,down:0},offset:0,scroller:t()?window:null,classes:{frozen:"headroom--frozen",pinned:"headroom--pinned",unpinned:"headroom--unpinned",top:"headroom--top",notTop:"headroom--not-top",bottom:"headroom--bottom",notBottom:"headroom--not-bottom",initial:"headroom"}},s.cutsTheMustard=!!(t()&&function(){}.bind&&"classList"in document.documentElement&&Object.assign&&Object.keys&&requestAnimationFrame),s});
 </script>
+<link href="data:image/png;base64,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" rel="icon" type="image/png">
 <script>/*!
  * clipboard.js v2.0.10
  * https://clipboardjs.com/
@@ -4109,11 +4110,11 @@ window.onload = function() {
   <li><a href="#projekt-beschreibung" id="toc-projekt-beschreibung" class="nav-link" data-scroll-target="#projekt-beschreibung">Projekt Beschreibung</a></li>
   <li><a href="#letzten-ergebnisse" id="toc-letzten-ergebnisse" class="nav-link" data-scroll-target="#letzten-ergebnisse">Letzten Ergebnisse</a></li>
   </ul></li>
-  <li><a href="#statistik" id="toc-statistik" class="nav-link" data-scroll-target="#statistik">Statistik</a>
+  <li><a href="#allgemeine-information" id="toc-allgemeine-information" class="nav-link" data-scroll-target="#allgemeine-information">Allgemeine Information</a>
   <ul class="collapse">
   <li><a href="#top-10-beobachterinnen" id="toc-top-10-beobachterinnen" class="nav-link" data-scroll-target="#top-10-beobachterinnen">Top 10 Beobachter/innen</a></li>
-  <li><a href="#top-10-taxa-spezies-level" id="toc-top-10-taxa-spezies-level" class="nav-link" data-scroll-target="#top-10-taxa-spezies-level">Top 10 Taxa (Spezies Level)</a></li>
-  <li><a href="#unique-taxa-mit-research-qualität" id="toc-unique-taxa-mit-research-qualität" class="nav-link" data-scroll-target="#unique-taxa-mit-research-qualität">Unique Taxa mit Research Qualität</a></li>
+  <li><a href="#top-10-taxa-spezies-ebene" id="toc-top-10-taxa-spezies-ebene" class="nav-link" data-scroll-target="#top-10-taxa-spezies-ebene">Top 10 Taxa (Spezies-Ebene)</a></li>
+  <li><a href="#unique-taxa-mit-research-grade" id="toc-unique-taxa-mit-research-grade" class="nav-link" data-scroll-target="#unique-taxa-mit-research-grade">Unique Taxa mit Research-Grade</a></li>
   <li><a href="#beobachtungs-qualität" id="toc-beobachtungs-qualität" class="nav-link" data-scroll-target="#beobachtungs-qualität">Beobachtungs Qualität</a></li>
   <li><a href="#beobachtungen-phylum" id="toc-beobachtungen-phylum" class="nav-link" data-scroll-target="#beobachtungen-phylum">Beobachtungen Phylum</a></li>
   <li><a href="#insecta---ordnungen" id="toc-insecta---ordnungen" class="nav-link" data-scroll-target="#insecta---ordnungen">Insecta - Ordnungen</a></li>
@@ -4136,13 +4137,13 @@ window.onload = function() {
 <div class="quarto-title-meta">
 
     
-  
     <div>
-    <div class="quarto-title-meta-heading">Geändert</div>
+    <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
     <div class="quarto-title-meta-contents">
-      <p class="date-modified">2023-04-24T00:00:00+00:00</p>
+      <p class="date">2023-04-24T18:03:47+00:00</p>
     </div>
   </div>
+  
     
   </div>
   
@@ -4171,32 +4172,30 @@ window.onload = function() {
 </div>
 </section>
 </section>
-<section id="statistik" class="level2">
-<h2 class="anchored" data-anchor-id="statistik">Statistik</h2>
-<ul>
-<li>Anzahl Beobachtungen:</li>
-<li>Anzahl Beobachter: 0</li>
-<li>Beobachtungen pro Beobachter (Mittelwert / Median): 0 / 0</li>
-<li>Anzahl unterschiedlicher Arten auf Spezies Niveau: 0</li>
-</ul>
+<section id="allgemeine-information" class="level2">
+<h2 class="anchored" data-anchor-id="allgemeine-information">Allgemeine Information</h2>
+<p>Insgesamt wurden Beobachtungen von 0 Beobachterinnen und Beobachtern hochgeladen. Das ergibt einen Mittelwert von 0 Beobachtungen pro Beobachter bzw. Beobachterin und einen Median von 0. Auf Spezies-Ebene wurden 0 Beobachtungen hochgeladen.</p>
 <section id="top-10-beobachterinnen" class="level3">
 <h3 class="anchored" data-anchor-id="top-10-beobachterinnen">Top 10 Beobachter/innen</h3>
+<p>In dieser Liste werden auch doppelte Beobachtungen gezählt, jedoch sollte dies nicht als Tipp betrachtet werden, um an erster Stelle zu stehen.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] &quot;Noch keine Beobachtungen&quot;</code></pre>
 </div>
 </div>
 </section>
-<section id="top-10-taxa-spezies-level" class="level3">
-<h3 class="anchored" data-anchor-id="top-10-taxa-spezies-level">Top 10 Taxa (Spezies Level)</h3>
+<section id="top-10-taxa-spezies-ebene" class="level3">
+<h3 class="anchored" data-anchor-id="top-10-taxa-spezies-ebene">Top 10 Taxa (Spezies-Ebene)</h3>
+<p>In dieser Liste sind die am häufigsten beobachteten Taxa auf Spezies-Ebene aufgeführt, die bereits identifiziert wurden. Es ist jedoch nicht erforderlich, dass diese von einer zweiten Person bestätigt wurden, um den Forschungsstandard (Research-Grade) zu erreichen.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] &quot;Noch keine Beobachtungen&quot;</code></pre>
 </div>
 </div>
 </section>
-<section id="unique-taxa-mit-research-qualität" class="level3">
-<h3 class="anchored" data-anchor-id="unique-taxa-mit-research-qualität">Unique Taxa mit Research Qualität</h3>
+<section id="unique-taxa-mit-research-grade" class="level3">
+<h3 class="anchored" data-anchor-id="unique-taxa-mit-research-grade">Unique Taxa mit Research-Grade</h3>
+<p>Besonders erfreulich sind natürlich immer einzigartige Funde, die nur von einer Person in der Challenge hochgeladen wurden. In dieser Liste müssen jedoch alle Spezies von einer zweiten Person bestätigt werden, um den Forschungsstandard (Research-Grade) zu erreichen.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] &quot;Noch keine Beobachtungen&quot;</code></pre>
@@ -4205,6 +4204,7 @@ window.onload = function() {
 </section>
 <section id="beobachtungs-qualität" class="level3">
 <h3 class="anchored" data-anchor-id="beobachtungs-qualität">Beobachtungs Qualität</h3>
+<p>iNaturalist unterteilt die Beobachtungsqualität in drei Kategorien. Die Kategorie “causal” umfasst Beobachtungen, bei denen mindestens eines der folgenden Elemente fehlt: das Datum der Beobachtung, der Beobachtungsort oder ein Foto (oder Tonaufnahme). Die Kategorie “needs_id” wird angezeigt, bis mindestens zwei Personen eine Spezies für diesen Upload einstimmig bestimmt haben, ohne Widerspruch. Die letzte und wertvollste Kategorie ist “research”, die bestätigte Beobachtungen auf Spezies-Ebene umfasst.</p>
 <div class="cell">
 <div class="cell-output cell-output-stdout">
 <pre><code>[1] &quot;Noch keine Beobachtungen&quot;</code></pre>
