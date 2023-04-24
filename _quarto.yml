@@ -9,11 +9,11 @@ website:
   repo-actions: "edit"
   navbar:
     left:
-      - href: graz2023.qmd
+      - file: index.qmd
         text: "Graz"
-      - href: graz2022.qmd
+      - file: graz2022.qmd
         text: "Graz 2022 (Demo)"
-      - href: about.qmd
+      - file: about.qmd
         text: "About"
 
 format:
