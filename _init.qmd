@@ -1,0 +1,91 @@
+```{r settings}
+#| include: false
+library(tidyverse)
+library(glue)
+theme_set(theme_classic(base_size = 12))
+colorBlindBlack8 <- c(
+    "#464343", "#E69F00", "#56B4E9", "#009E73",
+    "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
+    "#750a0f", "#669c8e"
+)
+options(ggplot2.discrete.colour = colorBlindBlack8)
+options(ggplot2.discrete.fill = colorBlindBlack8)
+
+```
+
+```{r loadData}
+#| include: false
+#| cache: true
+
+# RedList
+checkList <- read_csv("data/data_species_check_list.csv") %>%
+    rename(scientific_name = speciesname) %>%
+    distinct(scientific_name, .keep_all = TRUE) %>%
+    filter((annex_II_priority != "N" | annex_II != "N" | annex_IV != "N")) 
+# Birds RedList
+birdsList <- read_csv2("data/birds.csv") %>%
+    rename_with(~"scientific_name", 1) %>%
+    select(scientific_name, `Annex I`) %>%
+    rename(AnnexI = `Annex I`) %>%
+    drop_na(AnnexI)
+# German Common Names
+taxasDE <- read_csv('data/VernacularNames-german.csv') %>% 
+    group_by(id) %>% 
+    mutate(
+      vernacularName = paste(vernacularName, collapse = ', ')
+    ) %>% 
+    ungroup()
+# Full Taxon Tree Names
+taxas <- read_csv('data/taxa.csv') %>% 
+    left_join(taxasDE, by = "id") %>% 
+    select(id, scientificName, vernacularName, taxonRank, kingdom:infraspecificEpithet)
+rm(taxasDE)
+```
+
+```{r loadFunctions}
+#| include: false
+
+
+loadObs <- function(projectId){
+   tryCatch(
+     exp = {
+      getPagesUrl <- glue("https://api.inaturalist.org/v1/observations?project_id={projectId}&locale=de&order=desc&order_by=created_at&per_page=1&only_id=true")
+      getPagesFetch <- jsonlite::fromJSON(getPagesUrl)
+      totalResults <- getPagesFetch$total_results
+      perPage <- 200
+      totalPages <- ceiling(totalResults / perPage)
+      obsList <- list()
+      fields <- "(uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t),taxon:(id:!t))"
+      for (x in 1:totalPages) {
+        Sys.sleep(1)
+        print(glue("Fetching page {x} from {totalPages}"))
+        nextPage <- x
+        #obsUrl <- glue::glue("https://api.inaturalist.org/v1/observations?project_id={projectId}&locale=de&order=desc&order_by=created_at&per_page={perPage}&page={nextPage}")
+        obsUrl <- glue("https://api.inaturalist.org/v2/observations?project_id={projectId}&order=desc&order_by=id&per_page={perPage}&page={nextPage}&fields={fields}")
+
+        obsFetch <- jsonlite::fromJSON(obsUrl)
+        obsTempResults <- obsFetch$results %>% unnest(c(taxon, user), names_sep = ".")
+        obsList[[nextPage]] <- obsTempResults
+      }
+
+      obsResults <- bind_rows(obsList) %>%
+        left_join(taxas, by = c("taxon.id" = "id"))
+      return(obsResults)
+     },
+    error = function(e){
+      message('Caught an error!')
+      print(e)
+      return(NULL)
+    },
+    warning = function(w){
+      message('Caught an warning!')
+      print(w)
+      return(NULL)
+    },
+    finally = {
+      message('All done, quitting.')
+    }
+  )
+}
+```
+

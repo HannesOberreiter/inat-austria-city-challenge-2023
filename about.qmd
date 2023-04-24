@@ -1,0 +1,18 @@
+---
+title: "Hannes Oberreiter"
+order: 10
+about:
+  template: jolla
+  links:
+    - icon: file-person-fill
+      text: CV
+      href: https://www.btree.at/de/cv/
+    - icon: linkedin
+      text: Linkedin
+      href: https://www.linkedin.com/in/hannes-oberreiter-214a30265/
+    - icon: github
+      text: Github
+      href: https://github.com/HannesOberreiter
+---
+
+pastime forestry and apiculture || spare time programmer || hobby biologist

@@ -1,0 +1,204 @@
+
+```{r statsDistinct}
+if(!is.null(obsResults)){
+  distinctObserver <- obsResults$user.name %>% unique()
+  distinctSpecies <- obsResults %>% 
+    filter(taxonRank == 'species' | taxonRank == 'subspecies') %>%
+    pull(scientificName) %>%
+    unique(.)
+
+  statsObserver <- obsResults %>% 
+    count(user.name) %>%
+    summarise(
+        mean = round(mean(n), 1),
+        median = median(n),
+    )
+
+} else {
+  distinctObserver <- c()
+  distinctSpecies <- c()
+  statsObserver <- tibble(mean = c(0), median = c(0))
+}
+
+```
+
+## Statistik
+
+- Anzahl Beobachtungen: `r nrow(obsResults)`
+- Anzahl Beobachter: `r length(distinctObserver)`
+- Beobachtungen pro Beobachter (Mittelwert / Median): `r statsObserver$mean[1]` / `r statsObserver$median[1]`
+- Anzahl unterschiedlicher Arten auf Spezies Niveau: `r length(distinctSpecies)`
+
+### Top 10 Beobachter/innen
+
+```{r tableTopObserver}
+if(!is.null(obsResults)){
+  obsResults %>% 
+    count(user.name) %>% 
+    slice_max(n = 10, order_by = n) %>%
+    select('#' = n, 'Name' = user.name)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+### Top 10 Taxa (Spezies Level)
+
+```{r tableTopTaxa}
+if(!is.null(obsResults)){
+  obsResults %>% 
+    filter(taxonRank == 'species' | taxonRank == 'subspecies') %>%
+    count(scientificName, vernacularName) %>% 
+    slice_max(n = 10, order_by = n) %>%
+    select('#' = n, 'Wiss. Name' = scientificName, 'Name' = vernacularName)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+### Unique Taxa mit Research Qualität
+
+```{r tableUniqueTaxa}
+if(!is.null(obsResults)){
+  obsResults %>% 
+    filter((taxonRank == 'species' | taxonRank == 'subspecies') & quality_grade == 'research') %>%
+    add_count(scientificName, vernacularName) %>% 
+    filter(n == 1) %>% 
+    select('Wiss. Name' = scientificName, 'Name' = vernacularName,  'Username' = user.name)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+
+
+### Beobachtungs Qualität
+
+```{r plotQuality}
+if(!is.null(obsResults)){
+  obsResults %>% 
+    count(quality_grade) %>% 
+    arrange(desc(n)) %>%
+    mutate(
+      np = n / nrow(obsResults)
+    ) %>% 
+    ggplot() +
+      aes(x = quality_grade, y = np, fill = quality_grade) +
+      geom_bar(position = 'dodge', stat='identity', show.legend = FALSE) +
+      geom_text(aes(label=paste("n =", n)), position=position_dodge(width=0.9), hjust=-0.25) +
+      labs(
+        y = "Beobachtungen Qualität [%]",
+        x = ""
+      ) +
+      scale_y_continuous(
+        labels = scales::percent_format(),
+        limits = c(0, 1)
+      ) +
+      coord_flip(clip="off")
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+### Beobachtungen Phylum
+
+```{r plotPhylum}
+if(!is.null(obsResults)){
+  obsResults %>% 
+    count(phylum) %>% 
+    arrange(desc(n)) %>%
+    mutate(
+      np = n / nrow(obsResults)
+    ) %>% 
+    ggplot() +
+      aes(x = phylum, y = np, fill = phylum) +
+      geom_bar(position = 'dodge', stat='identity', show.legend = FALSE) +
+      geom_text(aes(label=paste("n =", n)), position=position_dodge(width=0.9), hjust=-0.25) +
+      labs(
+        y = "Beobachtungen Phyla [%]",
+        x = ""
+      ) +
+      scale_y_continuous(
+        labels = scales::percent_format(),
+        limits = c(0, 1)
+      ) +
+      coord_flip(clip="off")
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+### Insecta - Ordnungen
+
+```{r plotInsecta}
+if(!is.null(obsResults)){
+  obsInsecta <- obsResults %>% 
+    filter(class == "Insecta") %>%
+    drop_na(order)
+
+  obsInsecta %>%
+    count(order) %>%
+    mutate(
+        p = n / nrow(obsInsecta),
+        order = forcats::fct_reorder(order, p, .desc = TRUE)
+    ) %>%
+    ggplot(aes(y = order, x = p, label = n)) +
+    geom_col() +
+    geom_text(nudge_x = 0.01, check_overlap = TRUE) +
+    scale_x_continuous(
+        breaks = scales::pretty_breaks(),
+        labels = scales::label_percent()
+    ) +
+    labs(
+        y = "Insecta - Ordnung",
+        x = glue("Beobachtungen (# = {nrow(obsInsecta)}) [%]")
+    ) +
+    theme(
+        panel.grid.major.x = element_line()
+    )
+} else {
+  print('Noch keine Beobachtungen')
+}
+``` 
+
+### Beobachtungen mit Konflikt Bestimmungen
+
+```{r tableConflict}
+if(!is.null(obsResults)){
+  obsResults %>% 
+    filter(num_identification_disagreements > 0) %>% 
+    select(uri, "Username" = user.name, "Taxa" = scientificName)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+### Rote Liste
+
+Anmerkung: Beinhaltet die Rote Liste aller EU Länder.
+
+```{r tableCheckList}
+if(!is.null(obsResults)){
+  checkList %>% 
+    right_join(obsResults, by = c("scientific_name" = "scientificName")) %>%
+    drop_na(annex_II) %>%
+    add_count(scientific_name) %>% 
+    count(scientific_name, vernacularName, annex_II_priority, annex_II, annex_IV) %>% 
+    arrange(scientific_name) %>% 
+    select("Wiss. Name" = scientific_name, "Name" = vernacularName, annex_II_priority, annex_II, annex_IV, n)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+```{r tableBirdsList}
+if(!is.null(obsResults)){
+  birdsList %>% 
+    right_join(obsResults, by = c("scientific_name" = "scientificName")) %>%
+    drop_na(AnnexI) %>%
+    arrange(scientific_name) %>% 
+    count(scientific_name, vernacularName, AnnexI) %>% 
+    select("Wiss. Name" = scientific_name, "Name" = vernacularName, AnnexI, n)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
