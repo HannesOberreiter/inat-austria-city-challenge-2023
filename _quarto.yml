@@ -18,6 +18,9 @@ website:
 
 format:
   html:
+    embed-resources: true
+    include-in-header:
+      - file: customMetaTags.html
     link-external-icon: true
     theme:
       light: flatly
