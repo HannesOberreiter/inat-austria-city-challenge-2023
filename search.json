@@ -84,90 +84,6 @@
     "text": "Rote Liste\nAnmerkung: Keine Ahnung wie aktuell meine Rote Liste ist.\n\n\n?(caption)\n\n\n\n\n\n\n\n\n\n\n\n?(caption)"
   },
   {
-    "objectID": "page_demo.html",
-    "href": "page_demo.html",
-    "title": "Beehive - Fauna",
-    "section": "",
-    "text": "inaturalist.org/projects/beehive-fauna"
-  },
-  {
-    "objectID": "page_demo.html#allgemeine-information",
-    "href": "page_demo.html#allgemeine-information",
-    "title": "Beehive - Fauna",
-    "section": "Allgemeine Information",
-    "text": "Allgemeine Information\n\n\nCode\nif(!is.null(obsResults)){\n  distinctObserver &lt;- obsResults$user.id |&gt; unique()\n  distinctSpecies &lt;- obsResults |&gt; \n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    pull(scientificName) |&gt;\n    unique()\n\n  statsObserver &lt;- obsResults |&gt; \n    count(user.id) |&gt;\n    summarise(\n        mean = round(mean(n), 1),\n        median = median(n),\n    )\n\n} else {\n  distinctObserver &lt;- c()\n  distinctSpecies &lt;- c()\n  statsObserver &lt;- tibble(mean = c(0), median = c(0))\n}\n\n\nInsgesamt wurden 108 Beobachtungen von 3 Beobachterinnen und Beobachtern hochgeladen. Das ergibt einen Mittelwert von 36 Beobachtungen pro Beobachter bzw. Beobachterin und einen Median von 9. Auf Spezies-Ebene wurden 54 Beobachtungen hochgeladen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt;\n    count(user.id) |&gt;\n    ggplot(aes(x = n)) +\n    geom_histogram(bins = 30, fill = 'steelblue', color = 'black') +\n    labs(\n      x = 'Anzahl Beobachtungen',\n      y = 'Anzahl Beobachter/innen'\n    ) +\n    scale_y_continuous(\n      breaks = scales::pretty_breaks(),\n    ) +\n    scale_x_continuous(\n      breaks = scales::pretty_breaks(),\n    ) +\n    theme(\n      panel.grid.major.y = element_line()\n    )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 1: Histogramm der Beobachtungen pro Beobachter/in"
-  },
-  {
-    "objectID": "page_demo.html#fun-facts",
-    "href": "page_demo.html#fun-facts",
-    "title": "Beehive - Fauna",
-    "section": "Fun Facts",
-    "text": "Fun Facts\n\n\nCode\nif(!is.null(obsResults)){\n  isBirder &lt;- obsResults |&gt;\n    filter(class=='Aves') |&gt;\n    count(user.id, user.name) |&gt;\n    slice_max(n = 1, order_by = n, with_ties = FALSE)\n\n  mostDuplicatedObservations &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    count(user.id, user.name, scientificName) |&gt;\n    slice_max(n = 1, order_by = n, with_ties = FALSE)\n\n  longestName &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    mutate(\n      nameLength = nchar(scientificName)\n    ) |&gt;\n    slice_max(n = 1, order_by = nameLength, with_ties = FALSE)\n} else {\n  isBirder &lt;- tibble(user.id = c(0), user.name = c(0), n = c(0))\n  mostDuplicatedObservations &lt;- tibble(user.id = c(0), user.name = c(0), scientificName = c(0), n = c(0))\n  longestName &lt;- tibble(scientificName = c(0), nameLength = c(0))\n}\n\n\nUser (auch bekannt als Birder) NA hat NA Beobachtungen hochgeladen - mehr als jede/r andere. Besonders liebt der User bzw. die Userin Hannes Oberreiter die Art Araneus diadematus, die er/sie bereits 4 Mal hochgeladen hat. Das Taxon mit dem längsten Namen ist Protaetia cuprea metallica, das 26 Zeichen lang ist."
-  },
-  {
-    "objectID": "page_demo.html#diversität-indexes",
-    "href": "page_demo.html#diversität-indexes",
-    "title": "Beehive - Fauna",
-    "section": "Diversität Indexes",
-    "text": "Diversität Indexes\n\n\nCode\nif(!is.null(obsResults)){\n  shannonDiversity &lt;- obsResults |&gt;\n    filter(class == \"Insecta\") |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    add_count(class, name = 'N') |&gt;\n    count(scientificName, N) |&gt; \n    mutate(\n      relFreq = n / sum(N),\n      logRelFreq = log(relFreq)\n    ) |&gt; \n    summarise(\n      shannonDiversity = -sum(relFreq * logRelFreq),\n      speciesRichness = first(N)\n    )\n} else {\n  shannonDiversity &lt;- tibble(shannonDiversity = c(0), speciesRichness = c(0))\n}\n\n\nDie Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index H` (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.\nIn unserem Datensatz können wir den Shannon-Index H` für die Ordnung Insecta berechnen: 0.19. Die Anzahl der Arten in dieser Ordnung beträgt 44.\nZusätzlich können wir mit diesen Kennzahlen den Evenness-Index berechnen, der in unserem Fall 0.05 ist."
-  },
-  {
-    "objectID": "page_demo.html#top-10-beobachterinnen",
-    "href": "page_demo.html#top-10-beobachterinnen",
-    "title": "Beehive - Fauna",
-    "section": "Top 10 Beobachter/innen",
-    "text": "Top 10 Beobachter/innen\nIn dieser Liste werden auch doppelte Beobachtungen gezählt, jedoch sollte dies nicht als Tipp betrachtet werden, um an erster Stelle zu stehen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    count(user.id, user.name) |&gt;\n    slice_max(n = 10, order_by = n) |&gt;\n    select('Beob. [#]' = n, 'User' = user.name) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
-  },
-  {
-    "objectID": "page_demo.html#top-10-taxa-spezies-ebene",
-    "href": "page_demo.html#top-10-taxa-spezies-ebene",
-    "title": "Beehive - Fauna",
-    "section": "Top 10 Taxa (Spezies-Ebene)",
-    "text": "Top 10 Taxa (Spezies-Ebene)\nIn dieser Liste sind die am häufigsten beobachteten Taxa auf Spezies-Ebene aufgeführt, die bereits identifiziert wurden. Es ist jedoch nicht erforderlich, dass diese von einer zweiten Person bestätigt wurden, um den Forschungsstandard (Research-Grade) zu erreichen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    count(scientificName, vernacularName) |&gt; \n    slice_max(n = 10, order_by = n) |&gt;\n    select('Beob. [#]' = n, 'Wiss. Name' = scientificName, 'Umgangspr. Name' = vernacularName) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
-  },
-  {
-    "objectID": "page_demo.html#unique-taxa-mit-research-grade",
-    "href": "page_demo.html#unique-taxa-mit-research-grade",
-    "title": "Beehive - Fauna",
-    "section": "Unique Taxa mit Research-Grade",
-    "text": "Unique Taxa mit Research-Grade\nBesonders erfreulich sind natürlich immer einzigartige Funde, die nur von einer Person in der Challenge hochgeladen wurden. In dieser Liste müssen jedoch alle Spezies von einer zweiten Person bestätigt werden, um den Forschungsstandard (Research-Grade) zu erreichen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    filter((taxonRank == 'species' | taxonRank == 'subspecies') & quality_grade == 'research') |&gt;\n    add_count(scientificName, vernacularName) |&gt; \n    filter(n == 1) |&gt; \n    select('Wiss. Name' = scientificName, 'Umgangspr. Name' = vernacularName,  'User' = user.name) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
-  },
-  {
-    "objectID": "page_demo.html#beobachtungs-qualität",
-    "href": "page_demo.html#beobachtungs-qualität",
-    "title": "Beehive - Fauna",
-    "section": "Beobachtungs Qualität",
-    "text": "Beobachtungs Qualität\niNaturalist unterteilt die Beobachtungsqualität in drei Kategorien. Die Kategorie “causal” umfasst Beobachtungen, bei denen mindestens eines der folgenden Elemente fehlt: das Datum der Beobachtung, der Beobachtungsort oder ein Foto (oder Tonaufnahme). Die Kategorie “needs_id” wird angezeigt, bis mindestens zwei Personen eine Spezies für diesen Upload einstimmig bestimmt haben, ohne Widerspruch. Die letzte und wertvollste Kategorie ist “research”, die bestätigte Beobachtungen auf Spezies-Ebene umfasst.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    count(quality_grade) |&gt; \n    arrange(desc(n)) |&gt;\n    mutate(\n      np = n / nrow(obsResults),\n      quality_grade = forcats::fct_reorder(quality_grade, np, .desc = TRUE)\n    ) |&gt; \n    ggplot() +\n      aes(x = quality_grade, y = np, fill = quality_grade) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = FALSE) +\n      geom_text(aes(label=paste(\"n =\", n)), position=position_dodge(width=0.9), hjust=-0.25) +\n      labs(\n        y = \"Beobachtungen Qualität [%]\",\n        x = \"\"\n      ) +\n      scale_y_continuous(\n        labels = scales::percent_format(),\n        limits = c(0, 1)\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 2: Verteilung der Beobachtungsqualität auf iNaturalist"
-  },
-  {
-    "objectID": "page_demo.html#beobachtungen-phylum",
-    "href": "page_demo.html#beobachtungen-phylum",
-    "title": "Beehive - Fauna",
-    "section": "Beobachtungen Phylum",
-    "text": "Beobachtungen Phylum\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    count(phylum) |&gt; \n    drop_na(phylum) |&gt; \n    arrange(desc(n)) |&gt;\n    mutate(\n      np = n / nrow(obsResults),\n      phylum = forcats::fct_reorder(phylum, np, .desc = TRUE)\n    ) |&gt; \n    ggplot() +\n      aes(x = phylum, y = np, fill = np) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = FALSE) +\n      geom_text(aes(label=paste(\"n =\", n)), position=position_dodge(width=0.9), hjust=-0.25) +\n      labs(\n        y = \"Beobachtungen Phyla [%]\",\n        x = \"\"\n      ) +\n      scale_fill_viridis_c(\n        option = \"turbo\",\n      ) +\n      scale_y_continuous(\n        labels = scales::percent_format(),\n        limits = c(0, 1)\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 3: Relative und absolute Anzahl der Beobachtungen pro Phylum"
-  },
-  {
-    "objectID": "page_demo.html#insecta---ordnungen",
-    "href": "page_demo.html#insecta---ordnungen",
-    "title": "Beehive - Fauna",
-    "section": "Insecta - Ordnungen",
-    "text": "Insecta - Ordnungen\n\n\nCode\nif(!is.null(obsResults)){\n  obsInsecta &lt;- obsResults |&gt; \n    filter(class == \"Insecta\") |&gt;\n    drop_na(order)\n\n  obsInsecta |&gt;\n    count(order) |&gt;\n    mutate(\n        p = n / nrow(obsInsecta),\n        order = forcats::fct_reorder(order, p, .desc = TRUE)\n    ) |&gt;\n    ggplot(aes(y = order, x = p, label = n, fill = p)) +\n    geom_col(show.legend = FALSE) +\n    geom_text(nudge_x = 0.01, check_overlap = TRUE) +\n    scale_x_continuous(\n        breaks = scales::pretty_breaks(),\n        labels = scales::label_percent()\n    ) +\n    scale_fill_viridis_c(\n      option = \"turbo\",\n    ) +\n    labs(\n        y = \"Insecta - Ordnung\",\n        x = glue(\"Beobachtungen (# = {nrow(obsInsecta)}) [%]\")\n    ) +\n    theme(\n        panel.grid.major.x = element_line()\n    )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 4: Ordnungen innerhalb der Klasse Insecta und deren relative und absolute Anzahl an Beobachtungen."
-  },
-  {
-    "objectID": "page_demo.html#beobachtungen-mit-konflikt-bestimmungen",
-    "href": "page_demo.html#beobachtungen-mit-konflikt-bestimmungen",
-    "title": "Beehive - Fauna",
-    "section": "Beobachtungen mit Konflikt Bestimmungen",
-    "text": "Beobachtungen mit Konflikt Bestimmungen\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    filter(num_identification_disagreements &gt; 0) |&gt; \n    select(uri, \"User\" = user.name, \"Taxa\" = scientificName) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
-  },
-  {
-    "objectID": "page_demo.html#rote-liste",
-    "href": "page_demo.html#rote-liste",
-    "title": "Beehive - Fauna",
-    "section": "Rote Liste",
-    "text": "Rote Liste\nAnmerkung: Keine Ahnung wie aktuell meine Rote Liste ist.\n\n\nCode\nif(!is.null(obsResults)){\n  checkList |&gt; \n    right_join(obsResults, by = c(\"scientific_name\" = \"scientificName\")) |&gt;\n    drop_na(annex_II) |&gt;\n    add_count(scientific_name) |&gt; \n    count(scientific_name, vernacularName, annex_II_priority, annex_II, annex_IV) |&gt; \n    arrange(scientific_name) |&gt; \n    select(\"Wiss. Name\" = scientific_name, \"Umgangspr. Name\" = vernacularName, annex_II_priority, annex_II, annex_IV, \"Beob. (#)\" = n) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)\n\n\n\n\n\n\n\n\n\n\n\n\nCode\nif(!is.null(obsResults)){\n  birdsList |&gt; \n    right_join(obsResults, by = c(\"scientific_name\" = \"scientificName\")) |&gt;\n    drop_na(AnnexI) |&gt;\n    arrange(scientific_name) |&gt; \n    count(scientific_name, vernacularName, AnnexI) |&gt; \n    select(\"Wiss. Name\" = scientific_name, \"Umgangspr. Name\" = vernacularName, AnnexI, \"Beob. (#)\" = n) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
-  },
-  {
     "objectID": "page_about.html",
     "href": "page_about.html",
     "title": "About",
@@ -257,6 +173,90 @@
     "title": "City Nature Challenge 2023: Amstetten",
     "section": "Rote Liste",
     "text": "Rote Liste\nAnmerkung: Keine Ahnung wie aktuell meine Rote Liste ist.\n\n\nCode\nif(!is.null(obsResults)){\n  checkList |&gt; \n    right_join(obsResults, by = c(\"scientific_name\" = \"scientificName\")) |&gt;\n    drop_na(annex_II) |&gt;\n    add_count(scientific_name) |&gt; \n    count(scientific_name, vernacularName, annex_II_priority, annex_II, annex_IV) |&gt; \n    arrange(scientific_name) |&gt; \n    select(\"Wiss. Name\" = scientific_name, \"Umgangspr. Name\" = vernacularName, annex_II_priority, annex_II, annex_IV, \"Beob. (#)\" = n) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)\n\n\n\n[1] \"Noch keine Beobachtungen\"\n\n\n\n\n\n\nCode\nif(!is.null(obsResults)){\n  birdsList |&gt; \n    right_join(obsResults, by = c(\"scientific_name\" = \"scientificName\")) |&gt;\n    drop_na(AnnexI) |&gt;\n    arrange(scientific_name) |&gt; \n    count(scientific_name, vernacularName, AnnexI) |&gt; \n    select(\"Wiss. Name\" = scientific_name, \"Umgangspr. Name\" = vernacularName, AnnexI, \"Beob. (#)\" = n) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)\n\n\n\n[1] \"Noch keine Beobachtungen\""
+  },
+  {
+    "objectID": "page_demo.html",
+    "href": "page_demo.html",
+    "title": "Beehive - Fauna",
+    "section": "",
+    "text": "inaturalist.org/projects/beehive-fauna"
+  },
+  {
+    "objectID": "page_demo.html#allgemeine-information",
+    "href": "page_demo.html#allgemeine-information",
+    "title": "Beehive - Fauna",
+    "section": "Allgemeine Information",
+    "text": "Allgemeine Information\n\n\nCode\nif(!is.null(obsResults)){\n  distinctObserver &lt;- obsResults$user.id |&gt; unique()\n  distinctSpecies &lt;- obsResults |&gt; \n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    pull(scientificName) |&gt;\n    unique()\n\n  statsObserver &lt;- obsResults |&gt; \n    count(user.id) |&gt;\n    summarise(\n        mean = round(mean(n), 1),\n        median = median(n),\n    )\n\n} else {\n  distinctObserver &lt;- c()\n  distinctSpecies &lt;- c()\n  statsObserver &lt;- tibble(mean = c(0), median = c(0))\n}\n\n\nInsgesamt wurden 108 Beobachtungen von 3 Beobachterinnen und Beobachtern hochgeladen. Das ergibt einen Mittelwert von 36 Beobachtungen pro Beobachter bzw. Beobachterin und einen Median von 9. Auf Spezies-Ebene wurden 54 Beobachtungen hochgeladen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt;\n    count(user.id) |&gt;\n    ggplot(aes(x = n)) +\n    geom_histogram(bins = 30, fill = 'steelblue', color = 'black') +\n    labs(\n      x = 'Anzahl Beobachtungen',\n      y = 'Anzahl Beobachter/innen'\n    ) +\n    scale_y_continuous(\n      breaks = scales::pretty_breaks(),\n    ) +\n    scale_x_continuous(\n      breaks = scales::pretty_breaks(),\n    ) +\n    theme(\n      panel.grid.major.y = element_line()\n    )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 1: Histogramm der Beobachtungen pro Beobachter/in"
+  },
+  {
+    "objectID": "page_demo.html#fun-facts",
+    "href": "page_demo.html#fun-facts",
+    "title": "Beehive - Fauna",
+    "section": "Fun Facts",
+    "text": "Fun Facts\n\n\nCode\nif(!is.null(obsResults)){\n  isBirder &lt;- obsResults |&gt;\n    filter(class=='Aves') |&gt;\n    count(user.id, user.name) |&gt;\n    slice_max(n = 1, order_by = n, with_ties = FALSE)\n\n  mostDuplicatedObservations &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    count(user.id, user.name, scientificName) |&gt;\n    slice_max(n = 1, order_by = n, with_ties = FALSE)\n\n  longestName &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    mutate(\n      nameLength = nchar(scientificName)\n    ) |&gt;\n    slice_max(n = 1, order_by = nameLength, with_ties = FALSE)\n} else {\n  isBirder &lt;- tibble(user.id = c(0), user.name = c(0), n = c(0))\n  mostDuplicatedObservations &lt;- tibble(user.id = c(0), user.name = c(0), scientificName = c(0), n = c(0))\n  longestName &lt;- tibble(scientificName = c(0), nameLength = c(0))\n}\n\n\nUser (auch bekannt als Birder) NA hat NA Beobachtungen hochgeladen - mehr als jede/r andere. Besonders liebt der User bzw. die Userin Hannes Oberreiter die Art Araneus diadematus, die er/sie bereits 4 Mal hochgeladen hat. Das Taxon mit dem längsten Namen ist Protaetia cuprea metallica, das 26 Zeichen lang ist."
+  },
+  {
+    "objectID": "page_demo.html#diversität-indexes",
+    "href": "page_demo.html#diversität-indexes",
+    "title": "Beehive - Fauna",
+    "section": "Diversität Indexes",
+    "text": "Diversität Indexes\n\n\nCode\nif(!is.null(obsResults)){\n  shannonDiversity &lt;- obsResults |&gt;\n    filter(class == \"Insecta\") |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    add_count(class, name = 'N') |&gt;\n    count(scientificName, N) |&gt; \n    mutate(\n      relFreq = n / sum(N),\n      logRelFreq = log(relFreq)\n    ) |&gt; \n    summarise(\n      shannonDiversity = -sum(relFreq * logRelFreq),\n      speciesRichness = first(N)\n    )\n} else {\n  shannonDiversity &lt;- tibble(shannonDiversity = c(0), speciesRichness = c(0))\n}\n\n\nDie Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index H` (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.\nIn unserem Datensatz können wir den Shannon-Index H` für die Ordnung Insecta berechnen: 0.19. Die Anzahl der Arten in dieser Ordnung beträgt 44.\nZusätzlich können wir mit diesen Kennzahlen den Evenness-Index berechnen, der in unserem Fall 0.05 ist."
+  },
+  {
+    "objectID": "page_demo.html#top-10-beobachterinnen",
+    "href": "page_demo.html#top-10-beobachterinnen",
+    "title": "Beehive - Fauna",
+    "section": "Top 10 Beobachter/innen",
+    "text": "Top 10 Beobachter/innen\nIn dieser Liste werden auch doppelte Beobachtungen gezählt, jedoch sollte dies nicht als Tipp betrachtet werden, um an erster Stelle zu stehen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    count(user.id, user.name) |&gt;\n    slice_max(n = 10, order_by = n) |&gt;\n    select('Beob. [#]' = n, 'User' = user.name) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
+  },
+  {
+    "objectID": "page_demo.html#top-10-taxa-spezies-ebene",
+    "href": "page_demo.html#top-10-taxa-spezies-ebene",
+    "title": "Beehive - Fauna",
+    "section": "Top 10 Taxa (Spezies-Ebene)",
+    "text": "Top 10 Taxa (Spezies-Ebene)\nIn dieser Liste sind die am häufigsten beobachteten Taxa auf Spezies-Ebene aufgeführt, die bereits identifiziert wurden. Es ist jedoch nicht erforderlich, dass diese von einer zweiten Person bestätigt wurden, um den Forschungsstandard (Research-Grade) zu erreichen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    filter(taxonRank == 'species' | taxonRank == 'subspecies') |&gt;\n    count(scientificName, vernacularName) |&gt; \n    slice_max(n = 10, order_by = n) |&gt;\n    select('Beob. [#]' = n, 'Wiss. Name' = scientificName, 'Umgangspr. Name' = vernacularName) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
+  },
+  {
+    "objectID": "page_demo.html#unique-taxa-mit-research-grade",
+    "href": "page_demo.html#unique-taxa-mit-research-grade",
+    "title": "Beehive - Fauna",
+    "section": "Unique Taxa mit Research-Grade",
+    "text": "Unique Taxa mit Research-Grade\nBesonders erfreulich sind natürlich immer einzigartige Funde, die nur von einer Person in der Challenge hochgeladen wurden. In dieser Liste müssen jedoch alle Spezies von einer zweiten Person bestätigt werden, um den Forschungsstandard (Research-Grade) zu erreichen.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    filter((taxonRank == 'species' | taxonRank == 'subspecies') & quality_grade == 'research') |&gt;\n    add_count(scientificName, vernacularName) |&gt; \n    filter(n == 1) |&gt; \n    select('Wiss. Name' = scientificName, 'Umgangspr. Name' = vernacularName,  'User' = user.name) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
+  },
+  {
+    "objectID": "page_demo.html#beobachtungs-qualität",
+    "href": "page_demo.html#beobachtungs-qualität",
+    "title": "Beehive - Fauna",
+    "section": "Beobachtungs Qualität",
+    "text": "Beobachtungs Qualität\niNaturalist unterteilt die Beobachtungsqualität in drei Kategorien. Die Kategorie “causal” umfasst Beobachtungen, bei denen mindestens eines der folgenden Elemente fehlt: das Datum der Beobachtung, der Beobachtungsort oder ein Foto (oder Tonaufnahme). Die Kategorie “needs_id” wird angezeigt, bis mindestens zwei Personen eine Spezies für diesen Upload einstimmig bestimmt haben, ohne Widerspruch. Die letzte und wertvollste Kategorie ist “research”, die bestätigte Beobachtungen auf Spezies-Ebene umfasst.\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    count(quality_grade) |&gt; \n    arrange(desc(n)) |&gt;\n    mutate(\n      np = n / nrow(obsResults),\n      quality_grade = forcats::fct_reorder(quality_grade, np, .desc = TRUE)\n    ) |&gt; \n    ggplot() +\n      aes(x = quality_grade, y = np, fill = quality_grade) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = FALSE) +\n      geom_text(aes(label=paste(\"n =\", n)), position=position_dodge(width=0.9), hjust=-0.25) +\n      labs(\n        y = \"Beobachtungen Qualität [%]\",\n        x = \"\"\n      ) +\n      scale_y_continuous(\n        labels = scales::percent_format(),\n        limits = c(0, 1)\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 2: Verteilung der Beobachtungsqualität auf iNaturalist"
+  },
+  {
+    "objectID": "page_demo.html#beobachtungen-phylum",
+    "href": "page_demo.html#beobachtungen-phylum",
+    "title": "Beehive - Fauna",
+    "section": "Beobachtungen Phylum",
+    "text": "Beobachtungen Phylum\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    count(phylum) |&gt; \n    drop_na(phylum) |&gt; \n    arrange(desc(n)) |&gt;\n    mutate(\n      np = n / nrow(obsResults),\n      phylum = forcats::fct_reorder(phylum, np, .desc = TRUE)\n    ) |&gt; \n    ggplot() +\n      aes(x = phylum, y = np, fill = np) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = FALSE) +\n      geom_text(aes(label=paste(\"n =\", n)), position=position_dodge(width=0.9), hjust=-0.25) +\n      labs(\n        y = \"Beobachtungen Phyla [%]\",\n        x = \"\"\n      ) +\n      scale_fill_viridis_c(\n        option = \"turbo\",\n      ) +\n      scale_y_continuous(\n        labels = scales::percent_format(),\n        limits = c(0, 1)\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 3: Relative und absolute Anzahl der Beobachtungen pro Phylum"
+  },
+  {
+    "objectID": "page_demo.html#insecta---ordnungen",
+    "href": "page_demo.html#insecta---ordnungen",
+    "title": "Beehive - Fauna",
+    "section": "Insecta - Ordnungen",
+    "text": "Insecta - Ordnungen\n\n\nCode\nif(!is.null(obsResults)){\n  obsInsecta &lt;- obsResults |&gt; \n    filter(class == \"Insecta\") |&gt;\n    drop_na(order)\n\n  obsInsecta |&gt;\n    count(order) |&gt;\n    mutate(\n        p = n / nrow(obsInsecta),\n        order = forcats::fct_reorder(order, p, .desc = TRUE)\n    ) |&gt;\n    ggplot(aes(y = order, x = p, label = n, fill = p)) +\n    geom_col(show.legend = FALSE) +\n    geom_text(nudge_x = 0.01, check_overlap = TRUE) +\n    scale_x_continuous(\n        breaks = scales::pretty_breaks(),\n        labels = scales::label_percent()\n    ) +\n    scale_fill_viridis_c(\n      option = \"turbo\",\n    ) +\n    labs(\n        y = \"Insecta - Ordnung\",\n        x = glue(\"Beobachtungen (# = {nrow(obsInsecta)}) [%]\")\n    ) +\n    theme(\n        panel.grid.major.x = element_line()\n    )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 4: Ordnungen innerhalb der Klasse Insecta und deren relative und absolute Anzahl an Beobachtungen."
+  },
+  {
+    "objectID": "page_demo.html#beobachtungen-mit-konflikt-bestimmungen",
+    "href": "page_demo.html#beobachtungen-mit-konflikt-bestimmungen",
+    "title": "Beehive - Fauna",
+    "section": "Beobachtungen mit Konflikt Bestimmungen",
+    "text": "Beobachtungen mit Konflikt Bestimmungen\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    filter(num_identification_disagreements &gt; 0) |&gt; \n    select(uri, \"User\" = user.name, \"Taxa\" = scientificName) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
+  },
+  {
+    "objectID": "page_demo.html#rote-liste",
+    "href": "page_demo.html#rote-liste",
+    "title": "Beehive - Fauna",
+    "section": "Rote Liste",
+    "text": "Rote Liste\nAnmerkung: Keine Ahnung wie aktuell meine Rote Liste ist.\n\n\nCode\nif(!is.null(obsResults)){\n  checkList |&gt; \n    right_join(obsResults, by = c(\"scientific_name\" = \"scientificName\")) |&gt;\n    drop_na(annex_II) |&gt;\n    add_count(scientific_name) |&gt; \n    count(scientific_name, vernacularName, annex_II_priority, annex_II, annex_IV) |&gt; \n    arrange(scientific_name) |&gt; \n    select(\"Wiss. Name\" = scientific_name, \"Umgangspr. Name\" = vernacularName, annex_II_priority, annex_II, annex_IV, \"Beob. (#)\" = n) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)\n\n\n\n\n\n\n\n\n\n\n\n\nCode\nif(!is.null(obsResults)){\n  birdsList |&gt; \n    right_join(obsResults, by = c(\"scientific_name\" = \"scientificName\")) |&gt;\n    drop_na(AnnexI) |&gt;\n    arrange(scientific_name) |&gt; \n    count(scientific_name, vernacularName, AnnexI) |&gt; \n    select(\"Wiss. Name\" = scientific_name, \"Umgangspr. Name\" = vernacularName, AnnexI, \"Beob. (#)\" = n) |&gt;\n    datatable(rownames = FALSE)\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n?(caption)"
   },
   {
     "objectID": "page_graz.html",
