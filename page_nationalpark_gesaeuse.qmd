@@ -1,0 +1,24 @@
+---
+title: "City Nature Challenge 2023: Nationalparkregion Gesäuse"
+lang: 'de-AT'
+execute:
+  waring: false
+  error: false
+order: 7
+date: last-modified
+date-format: "YYYY-MM-DDTHH:mm:ssZ"
+---
+
+- [inaturalist.org/projects/city-nature-challenge-2023-nationalparkregion-gesaeuse](https://www.inaturalist.org/projects/city-nature-challenge-2023-nationalparkregion-gesaeuse)
+
+{{< include _init.qmd >}}
+
+```{r init}
+#| include: false
+#| cache: false
+projectId <- c("Gesäuse" = "148580")
+obsResults <- loadObs(projectId)
+```
+
+{{< include _body.qmd >}}
+

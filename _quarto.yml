@@ -1,30 +1,67 @@
 project:
   type: website
+  render:
+    [
+      index.qmd,
+      page_demo.qmd,
+      page_about.qmd,
+      page_amstetten.qmd,
+      page_graz.qmd,
+      page_industrieviertel.qmd,
+      page_innsbruck.qmd,
+      page_klagenfurt.qmd,
+      page_krems-wachau-melk.qmd,
+      page_nationalpark_gesaeuse.qmd,
+      page_nationalpark_neusiedlersee-seewinkel.qmd,
+    ]
 
 website:
-  title: "City Nature Challenge Austria"
+  title: "CNC Austria 2023"
   search: false
   description: "Auswertungen und Analyse für die iNaturalist City Nature Challenge in Österreich."
   repo-url: "https://github.com/HannesOberreiter/inat-austria-city-challenge-2023"
   repo-actions: "edit"
-  favicon: "favicon.png"
+  favicon: "assets/favicon.png"
   navbar:
+    right:
+      - icon: person-lines-fill
+        text: ""
+        file: page_about.qmd
     left:
       - file: index.qmd
-        text: "Graz"
-      - file: graz2022.qmd
-        text: "Graz 2022 (Demo)"
-      - file: about.qmd
-        text: "About"
+        text: "Übersicht"
+      - file: page_demo.qmd
+        text: "Demo Datensatz"
+      - text: "Regionen"
+        menu:
+          - file: page_graz.qmd
+            text: "Graz"
+          - file: page_amstetten.qmd
+            text: "Amstetten"
+          - file: page_industrieviertel.qmd
+            text: "Industrieviertel"
+          - file: page_innsbruck.qmd
+            text: "Innsbruck"
+          - file: page_klagenfurt.qmd
+            text: "Klagenfurt"
+          - file: page_krems-wachau-melk.qmd
+            text: "Krems-Wachau-Melk"
+      - text: "Nationalparks"
+        menu:
+          - file: page_nationalpark_gesaeuse.qmd
+            text: "Gesäuse"
+          - file: page_nationalpark_neusiedlersee-seewinkel.qmd
+            text: "Neusiedler See - Seewinkel"
 
 format:
   html:
-    embed-resources: true
+    code-fold: true
+    embed-resources: false
     include-in-header:
-      - file: customMetaTags.html
-    link-external-icon: true
+      - file: assets/customMetaTags.html
+    link-external-icon: false
     theme:
       light: flatly
       dark: darkly
-    css: styles.css
+    css: assets/styles.css
     toc: true

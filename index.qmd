@@ -1,5 +1,5 @@
 ---
-title: "City Nature Challenge 2023: Graz bis Tierwelt Herberstein"
+title: "City Nature Challenges in Österreich, 28. April – 1. Mai 2023"
 lang: 'de-AT'
 execute:
   echo: false
@@ -13,31 +13,44 @@ date: last-modified
 date-format: "YYYY-MM-DDTHH:mm:ssZ"
 ---
 
-## iNaturalist
+- [https://www.citynaturechallenge.at/](https://www.citynaturechallenge.at/)
+- [inaturalist.org/projects/city-nature-challenges-in-oesterreich-2023](https://www.inaturalist.org/projects/city-nature-challenges-in-oesterreich-2023)
 
-- [www.inaturalist.org/home](https://www.inaturalist.org/home)
-- [Projekt Seite](https://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei)
-
-### Projekt Beschreibung
-
-Graz und seine Umgebung zählen zu den artenreichsten Gebieten Mitteleuropas. Dies konnten wir mit den Europatiteln in Bezug auf registrierte Arten in den letzten zwei Jahren der CNC beweisen. Die Tierwelt Herberstein & das Euroaschutzgebiet Feistritzklamm wiederum, ist in Bezug auf Käfer mit über 2.224 registrierten Arten das, derzeit artenreichste Käferparadies Europas. Die restliche Artenvielfalt ist größtenteils unzureichend untersucht. Hilf mit bei der Suche nach möglichst vielen Tier-, Pflanzen- & Pilzarten, um der restlichen Welt zu zeigen, welche Biodiversität von Graz bis Herberstein schlummert! JEDE BEOBACHTUNG ZÄHLT!!!
-
-### Letzten Ergebnisse
-
-- 2020: Beobachtungen: 5.098; Arten: >1320; BeobachterInnen: 121
-- 2021: Beobachtungen: 17.189; Arten: >2.529; BeobachterInnen: 230
-- 2022: Beobachtungen: 16.878; Arten: >2.820; BeobachterInnen: 196
+![City Nature Challenge Logo](/assets/logo.png)
 
 {{< include _init.qmd >}}
 
-
 ```{r init}
 #| include: false
+#! cache: false
+projectIds <- c("Amstetten" = "155713", "Graz" = "148063", "Industrieviertel" = "156486", "Innsbruck" = "156501", "Klagenfurt" = "148013", "Krems" = "147007", "Gesäuse" = "148580", "Neusiedlersee" = "154309", "Demo" = "27173")
+obsResultsList <- list()
+for(i in 1:length(projectIds)){
+  tempResult <- loadObs(projectIds[i])
+  if(!is.null(tempResult)){
+    write_csv(tempResult, paste0("data/obs_", projectIds[i], ".csv"))
+    obsResultsList[[i]] <- tempResult
+  }
+}
+obsResults <- bind_rows(obsResultsList)
+```
 
-projectId <- "148063" # Graz, 2023
-obsResults <- loadObs(projectId)
+```{r CompareProjects}
+#| label: fig-projects
+#| fig-cap: "Anzahl der Beobachtungen in den einzelnen Projekt Regionen"
 
+obsResults |>
+  group_by(project.name) |>
+  summarise(n = n()) |>
+  ggplot(
+    aes(x = reorder(project.name, n), y = n, fill = project.name)
+    ) +
+  geom_bar(stat = "identity", show.legend = FALSE) +
+  coord_flip() +
+  labs(x = "", y = "Anzahl der Beobachtungen")+
+  theme(
+    panel.grid.major.x = element_line()
+  )
 ```
 
 {{< include _body.qmd >}}
-

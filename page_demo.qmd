@@ -1,29 +1,24 @@
 ---
-title: "City Nature Challenge 2022: Graz"
+title: "Beehive - Fauna"
 lang: 'de-AT'
 execute:
-  echo: false
   waring: false
   error: false
 order: 2
-format:
-    html:
-        df-print: paged
 date: last-modified
 date-format: "YYYY-MM-DDTHH:mm:ssZ"
 ---
 
-## Demo 2022
+- [inaturalist.org/projects/beehive-fauna](https://www.inaturalist.org/projects/beehive-fauna)
 
 {{< include _init.qmd >}}
 
 
 ```{r init}
 #| include: false
-
-projectId <- "121977" # Graz, 2022
+#| cache: false
+projectId <- c("Demo" = "27173")
 obsResults <- loadObs(projectId)
-
 ```
 
 {{< include _body.qmd >}}

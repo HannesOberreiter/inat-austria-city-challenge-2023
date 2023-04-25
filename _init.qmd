@@ -8,6 +8,8 @@ library(dplyr)
 library(jsonlite)
 library(readr)
 library(stringr)
+library(rmarkdown)
+library(DT)
 
 theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(
@@ -25,26 +27,28 @@ options(ggplot2.discrete.fill = colorBlindBlack8)
 #| cache: true
 
 # RedList
-checkList <- read_csv("data/data_species_check_list.csv") %>%
-    rename(scientific_name = speciesname) %>%
-    distinct(scientific_name, .keep_all = TRUE) %>%
+checkList <- read_csv("data/data_species_check_list.csv", show_col_types = FALSE) |>
+    rename(scientific_name = speciesname) |>
+    distinct(scientific_name, .keep_all = TRUE) |>
     filter((annex_II_priority != "N" | annex_II != "N" | annex_IV != "N")) 
 # Birds RedList
-birdsList <- read_csv2("data/birds.csv") %>%
-    rename_with(~"scientific_name", 1) %>%
-    select(scientific_name, `Annex I`) %>%
-    rename(AnnexI = `Annex I`) %>%
+birdsList <- read_csv2("data/birds.csv", show_col_types = FALSE) |>
+    rename_with(~"scientific_name", 1) |>
+    select(scientific_name, `Annex I`) |>
+    rename(AnnexI = `Annex I`) |>
     drop_na(AnnexI)
 # German Common Names
-taxasDE <- read_csv('data/VernacularNames-german.csv') %>% 
-    group_by(id) %>% 
+taxasDE <- read_csv('data/VernacularNames-german.csv', show_col_types = FALSE) |> 
+    group_by(id) |> 
     summarise(
-      vernacularName = paste(vernacularName, collapse = ', ') %>% stringr::str_trunc(35)
+      vernacularName =  paste(vernacularName, collapse = ', ') |>
+                        stringr::str_trunc(35)
     )
 # Full Taxon Tree Names
-taxas <- read_csv('data/taxa.csv') %>% 
-    left_join(taxasDE, by = "id") %>% 
+taxas <- read_csv('data/taxa.csv', show_col_types = FALSE) |> 
+    left_join(taxasDE, by = "id") |> 
     select(id, scientificName, vernacularName, taxonRank, kingdom:infraspecificEpithet)
+
 rm(taxasDE)
 ```
 
@@ -53,7 +57,12 @@ rm(taxasDE)
 loadObs <- function(projectId, maxLoops = 200){
    tryCatch(
      exp = {
-       
+      checkIfFileExists <- file.exists(glue("data/obs_{projectId}.csv"))
+      if(checkIfFileExists){
+        print("File exists, loading from file")
+        obsResults <- read_csv(glue("data/obs_{projectId}.csv"), show_col_types = FALSE)
+        return(obsResults)
+      }
       apiEndpoint <- "https://api.inaturalist.org/v2/observations"
       fields <- "(id:!t,uri:!t,quality_grade:!t,num_identification_disagreements:!t,user:(name:!t,id:!t,login:!t),taxon:(id:!t))"
       perPage <- 200
@@ -74,7 +83,7 @@ loadObs <- function(projectId, maxLoops = 200){
           break;
         }
         
-        obsTempResults <- obsFetch$results %>% unnest(c(taxon, user), names_sep = ".")
+        obsTempResults <- obsFetch$results |> unnest(c(taxon, user), names_sep = ".")
         aboveId = max(obsTempResults$id)
         obsList[[loopCounter]] <- obsTempResults
         
@@ -98,12 +107,17 @@ loadObs <- function(projectId, maxLoops = 200){
         loopCounter <- loopCounter + 1
         
       }
-
-      obsResults <- bind_rows(obsList) %>%
-        left_join(taxas, by = c("taxon.id" = "id")) %>% 
+      if(length(obsList) == 0){
+        print("No results")
+        return(NULL)
+      }
+      obsResults <- bind_rows(obsList) |>
+        left_join(taxas, by = c("taxon.id" = "id"))|> 
         mutate(
-          user.name = ifelse(is.na(user.name) | user.name == '', user.login, user.name)
-        ) %>%
+          user.name = ifelse(is.na(user.name) | user.name == '', user.login, user.name),
+          project.id = projectId,
+          project.name = names(projectId)
+        ) |>
         distinct(uuid, .keep_all = TRUE) # catch any possible double entries due to our loop logic
       return(obsResults)
      },
