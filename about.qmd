@@ -15,10 +15,8 @@ about:
       href: https://github.com/HannesOberreiter
 ---
 
-Auswertung der Österreichischen iNaturalist City Challenge.
+Auswertung der Österreichischen iNaturalist City Challenge. Seite wird automatisch alle paar Stunden aktualisiert während dem Event. Die Daten werden von [iNaturalist](https://www.inaturalist.org/) bereitgestellt.
 
 <hr/>
 
-Made by Hannes Oberreiter 
-
-*pastime forestry and apiculture || spare time programmer || hobby biologist*
+Made by [Hannes Oberreiter](https://www.btree.at) with the help of [R](https://www.r-project.org/), [Quarto](https://quarto.org/) and many other great Open Source tools.
