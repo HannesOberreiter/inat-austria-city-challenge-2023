@@ -1,19 +1,8 @@
 project:
   type: website
-  render:
-    [
-      index.qmd,
-      page_demo.qmd,
-      page_about.qmd,
-      page_amstetten.qmd,
-      page_graz.qmd,
-      page_industrieviertel.qmd,
-      page_innsbruck.qmd,
-      page_klagenfurt.qmd,
-      page_krems-wachau-melk.qmd,
-      page_nationalpark_gesaeuse.qmd,
-      page_nationalpark_neusiedlersee-seewinkel.qmd,
-    ]
+  resources:
+    - fonts/*
+  render: [index.qmd, page_*.qmd]
 
 website:
   title: "CNC Austria 2023"
@@ -22,6 +11,7 @@ website:
   repo-url: "https://github.com/HannesOberreiter/inat-austria-city-challenge-2023"
   repo-actions: "edit"
   favicon: "assets/favicon.png"
+
   navbar:
     right:
       - icon: person-lines-fill
@@ -61,7 +51,7 @@ format:
       - file: assets/customMetaTags.html
     link-external-icon: false
     theme:
-      light: flatly
-      dark: darkly
+      light: [flatly, assets/fonts.scss]
+      dark: [darkly, assets/fonts.scss]
     css: assets/styles.css
     toc: true
