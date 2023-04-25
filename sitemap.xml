@@ -2,14 +2,46 @@
 <urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
   <url>
     <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/index.html</loc>
-    <lastmod>2023-04-24T18:06:09.436Z</lastmod>
+    <lastmod>2023-04-25T17:11:08.791Z</lastmod>
   </url>
   <url>
-    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/graz2022.html</loc>
-    <lastmod>2023-04-24T18:14:01.302Z</lastmod>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_demo.html</loc>
+    <lastmod>2023-04-25T17:11:37.986Z</lastmod>
   </url>
   <url>
-    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/about.html</loc>
-    <lastmod>2023-04-24T18:14:03.778Z</lastmod>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_about.html</loc>
+    <lastmod>2023-04-25T17:11:38.318Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_amstetten.html</loc>
+    <lastmod>2023-04-25T17:12:05.598Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_graz.html</loc>
+    <lastmod>2023-04-25T17:12:32.670Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_industrieviertel.html</loc>
+    <lastmod>2023-04-25T17:12:59.978Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_innsbruck.html</loc>
+    <lastmod>2023-04-25T17:13:27.317Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_klagenfurt.html</loc>
+    <lastmod>2023-04-25T17:13:54.585Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_krems-wachau-melk.html</loc>
+    <lastmod>2023-04-25T17:14:20.125Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_nationalpark_gesaeuse.html</loc>
+    <lastmod>2023-04-25T17:14:47.305Z</lastmod>
+  </url>
+  <url>
+    <loc>https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/page_nationalpark_neusiedlersee-seewinkel.html</loc>
+    <lastmod>2023-04-25T17:15:12.732Z</lastmod>
   </url>
 </urlset>
