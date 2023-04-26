@@ -90,7 +90,7 @@ if(!is.null(obsResults)){
         x = ""
       ) +
       scale_y_continuous(
-        labels = scales::label_number_si(),
+        labels = scales::label_number(scale_cut = cut_short_scale()),
       ) +
       coord_flip(clip="off") +
       theme(
