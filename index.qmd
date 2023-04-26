@@ -53,4 +53,53 @@ obsResults |>
   )
 ```
 
+## Indizes zwischen den Regionen
+
+```{r CompareProjects2}
+  obsResults |>
+    group_by(project.name) |>
+    summarise(
+      nObserver = n_distinct(user.name),
+      nObservations = n(),
+      nTaxa = n_distinct(scientificName),
+      nResearchGrade = sum(quality_grade == "research"),
+      ) |>
+    select("Region" = project.name, "BeobachterIn" = nObserver, "Beobachtungen" = nObservations, "Taxa" = nTaxa, "Research Grade" = nResearchGrade) |>
+    datatable(rownames = FALSE)
+```
+
+## Beobachtungen Regnum
+
+```{r plotRegnum}
+#| label: fig-Regnum
+#| fig-cap: Absolute Anzahl der Beobachtungen pro Reich, aufgeteilt in teilnehmende Regionen
+if(!is.null(obsResults)){
+  obsResults |> 
+    count(kingdom, project.name) |> 
+    drop_na(kingdom) |> 
+    arrange(desc(n)) |>
+    mutate(
+      kingdom = forcats::fct_reorder(kingdom, kingdom, .desc = TRUE)
+    ) |> 
+    select(n, "Region" = project.name, kingdom) |>
+    ggplot() +
+      aes(x = kingdom, y = n, fill = Region) +
+      geom_bar(position = 'dodge', stat='identity', show.legend = TRUE) +
+      labs(
+        y = "Beobachtungen pro Reich [#]",
+        x = ""
+      ) +
+      scale_y_continuous(
+        labels = scales::label_number_si(),
+      ) +
+      coord_flip(clip="off") +
+      theme(
+        panel.grid.major.x = element_line()
+      )
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+
 {{< include _body.qmd >}}
