@@ -87,9 +87,21 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 }</script>
 
 <script src="site_libs/htmlwidgets-1.6.2/htmlwidgets.js"></script>
+<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
+<link href="site_libs/leaflet-1.3.1/leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-1.3.1/leaflet.js"></script>
+<link href="site_libs/leafletfix-1.0.0/leafletfix.css" rel="stylesheet">
+<script src="site_libs/proj4-2.6.2/proj4.min.js"></script>
+<script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
+<link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
+<script src="site_libs/leaflet-binding-2.1.2/leaflet.js"></script>
+<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.css" rel="stylesheet">
+<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.Default.css" rel="stylesheet">
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.js"></script>
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.freezable.js"></script>
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.layersupport.js"></script>
 <link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
 <script src="site_libs/datatables-binding-0.27/datatables.js"></script>
-<script src="site_libs/jquery-3.6.0/jquery-3.6.0.min.js"></script>
 <link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
 <link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.extra.css" rel="stylesheet">
 <script src="site_libs/dt-core-1.12.1/js/jquery.dataTables.min.js"></script>
@@ -198,6 +210,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
    
   <ul>
   <li><a href="#allgemeine-information" id="toc-allgemeine-information" class="nav-link active" data-scroll-target="#allgemeine-information">Allgemeine Information</a></li>
+  <li><a href="#beobachtungskarte" id="toc-beobachtungskarte" class="nav-link" data-scroll-target="#beobachtungskarte">Beobachtungskarte</a></li>
   <li><a href="#fun-facts" id="toc-fun-facts" class="nav-link" data-scroll-target="#fun-facts">Fun Facts</a></li>
   <li><a href="#diversität-indexes" id="toc-diversität-indexes" class="nav-link" data-scroll-target="#diversität-indexes">Diversität Indexes</a></li>
   <li><a href="#top-10-beobachterinnen" id="toc-top-10-beobachterinnen" class="nav-link" data-scroll-target="#top-10-beobachterinnen">Top 10 Beobachter/innen</a></li>
@@ -227,7 +240,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2023-04-25T17:22:51+00:00</p>
+      <p class="date">2023-04-26T17:31:34+00:00</p>
     </div>
   </div>
   
@@ -301,34 +314,140 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 </div>
 </div>
 </div>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(time_observed_at) <span class="sc">|&gt;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>      <span class="at">time_observed_at =</span> lubridate<span class="sc">::</span><span class="fu">ymd_hms</span>(time_observed_at, <span class="at">tz =</span> <span class="st">"Europe/Vienna"</span>, <span class="at">quiet =</span> <span class="cn">TRUE</span>),</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">hour_observed_at =</span> hms<span class="sc">::</span><span class="fu">as_hms</span>(time_observed_at),</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">weekday_observed_at =</span> lubridate<span class="sc">::</span><span class="fu">wday</span>(</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        time_observed_at, </span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">week_start =</span> <span class="dv">1</span>,</span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">locale=</span><span class="st">"de_AT"</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(time_observed_at, weekday_observed_at, hour_observed_at)  <span class="sc">|&gt;</span></span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">x =</span> hour_observed_at, <span class="at">fill =</span> weekday_observed_at)) <span class="sc">+</span></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_histogram</span>(<span class="at">binwidth =</span> <span class="dv">60</span><span class="sc">*</span><span class="dv">60</span>, <span class="at">color =</span> <span class="st">'black'</span>) <span class="sc">+</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>      <span class="at">x =</span> <span class="st">'Stunde'</span>,</span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>      <span class="at">y =</span> <span class="st">'Anzahl Beobachtungen'</span>,</span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">fill =</span> <span class="st">'Wochentag'</span></span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(),</span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_time</span>(</span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>      <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">breaks_width</span>(<span class="st">"1 hour"</span>),</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>      <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_time</span>(<span class="at">format =</span> <span class="st">"%H"</span>)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a>      <span class="at">panel.grid.major.y =</span> <span class="fu">element_line</span>()</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span> </span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    <span class="fu">facet_wrap</span>(<span class="sc">~</span>weekday_observed_at, <span class="at">ncol =</span> <span class="dv">1</span>)</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output cell-output-stderr">
+<pre><code>Warning: There was 1 warning in `mutate()`.
+ℹ In argument: `weekday_observed_at = lubridate::wday(...)`.
+Caused by warning in `Sys.setlocale()`:
+! OS reports request to set locale to "de_AT" cannot be honored</code></pre>
+</div>
+<div class="cell-output-display">
+<div id="fig-time" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="page_demo_files/figure-html/fig-time-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Abbildung&nbsp;2: In welcher Stunde an welchen Wochentag wie viele Beobachtungen gemacht wurden</figcaption>
+</figure>
+</div>
+</div>
+</div>
+</section>
+<section id="beobachtungskarte" class="level2">
+<h2 class="anchored" data-anchor-id="beobachtungskarte">Beobachtungskarte</h2>
+<div class="cell">
+<details>
+<summary>Code</summary>
+<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  mapDf <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(location, time_observed_at) <span class="sc">|&gt;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">separate</span>(location, <span class="fu">c</span>(<span class="st">'latitude'</span>, <span class="st">'longitude'</span>), <span class="at">sep =</span> <span class="st">','</span>, <span class="at">remove =</span> <span class="cn">FALSE</span>, <span class="at">convert =</span> <span class="cn">TRUE</span>) <span class="sc">|&gt;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">label =</span> <span class="fu">glue</span>(<span class="st">"{user.name} &lt;br/&gt; {scientificName} &lt;br/&gt; {time_observed_at} &lt;br/&gt; &lt;a href='{uri}'&gt;Beobachtung auf iNat&lt;/a&gt;"</span>),</span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">group =</span> lubridate<span class="sc">::</span><span class="fu">wday</span>(</span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        time_observed_at, </span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="cn">TRUE</span>,</span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">week_start =</span> <span class="dv">1</span>,</span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">locale=</span><span class="st">"de_AT"</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>  mapDfSplit <span class="ot">&lt;-</span> <span class="fu">split</span>(mapDf, mapDf<span class="sc">$</span>group)</span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>  m <span class="ot">&lt;-</span> <span class="fu">leaflet</span>() <span class="sc">|&gt;</span> <span class="co"># create map with dataset</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">setView</span>(<span class="at">lng =</span> <span class="fl">14.12456</span>, <span class="at">lat =</span> <span class="fl">47.59397</span>, <span class="at">zoom =</span> <span class="dv">8</span>) <span class="sc">|&gt;</span> <span class="co"># fyi geographic center of austria</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addTiles</span>()</span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>  <span class="cf">for</span>(name <span class="cf">in</span> <span class="fu">names</span>(mapDfSplit)){</span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>    m <span class="ot">&lt;-</span> m <span class="sc">|&gt;</span></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>      <span class="fu">addCircleMarkers</span>(</span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">data =</span> mapDfSplit[[name]],</span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>        <span class="at">lng =</span> <span class="sc">~</span>longitude,</span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>        <span class="at">lat =</span> <span class="sc">~</span>latitude,</span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">popup =</span> <span class="sc">~</span>label,</span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="at">label =</span> <span class="sc">~</span>scientificName,</span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>        <span class="at">group =</span> name,</span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>        <span class="at">clusterOptions =</span> <span class="fu">markerClusterOptions</span>()</span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>  }</span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>  m <span class="sc">|&gt;</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="fu">addLayersControl</span>(</span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>      <span class="at">overlayGroups =</span> <span class="fu">names</span>(mapDfSplit),</span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a>      <span class="at">options =</span> <span class="fu">layersControlOptions</span>(<span class="at">collapsed =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb5-37"><a href="#cb5-37" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb5-38"><a href="#cb5-38" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb5-39"><a href="#cb5-39" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb5-40"><a href="#cb5-40" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+</details>
+<div class="cell-output-display">
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a4cbcc77b3f05fa018c0" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-a4cbcc77b3f05fa018c0">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[47.59397,14.12456],8,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircleMarkers","args":[[47.1313911164,47.131388979,47.1313860873,47.1352043484,47.18052,47.13529136],[14.8639691155,14.8639614042,14.8641059082,14.8597537726,14.77058,14.85969995],10,null,"Mon",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Hannes Oberreiter <br/> Formica rufa <br/> 2019-08-05 09:07:33 <br/> <a href='https://www.inaturalist.org/observations/30232724'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Psychidae <br/> 2019-08-05 09:11:27 <br/> <a href='https://www.inaturalist.org/observations/30232733'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Lagria hirta <br/> 2019-08-05 10:12:39 <br/> <a href='https://www.inaturalist.org/observations/30232741'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Acronicta euphorbiae <br/> 2021-06-28 12:01:18 <br/> <a href='https://www.inaturalist.org/observations/84837275'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Acherontia atropos <br/> 2021-07-19 05:14:00 <br/> <a href='https://www.inaturalist.org/observations/87757830'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Apamea lateritia <br/> 2022-07-18 05:12:26 <br/> <a href='https://www.inaturalist.org/observations/126770423'>Beobachtung auf iNat<\/a>"],null,["Formica rufa","Psychidae","Lagria hirta","Acronicta euphorbiae","Acherontia atropos","Apamea lateritia"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[[47.1313689,47.1313211275,-36.6820567427,47.1312593562,47.1313036067,47.131251601,47.1309792543,47.1313515067,47.1312916667,47.1352361111],[14.864128,14.8640939221,174.6735518239,14.8640241846,14.8640744761,14.8640841991,14.864997156,14.8641499132,14.8641027778,14.8596472222],10,null,"Tue",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Hannes Oberreiter <br/> Lepidoptera <br/> 2018-08-21 04:14:18 <br/> <a href='https://www.inaturalist.org/observations/15757584'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Lepismachilis <br/> 2018-11-06 11:57:27 <br/> <a href='https://www.inaturalist.org/observations/18166929'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Oemona hirta <br/> 2018-12-04 18:31:57 <br/> <a href='https://www.inaturalist.org/observations/18832233'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Leptoglossus occidentalis <br/> 2019-12-31 13:05:06 <br/> <a href='https://www.inaturalist.org/observations/37128569'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Pholidoptera griseoaptera <br/> 2020-09-08 14:15:40 <br/> <a href='https://www.inaturalist.org/observations/58954062'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Psychidae <br/> 2020-09-08 14:17:12 <br/> <a href='https://www.inaturalist.org/observations/58954107'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Gomphocerippus rufus <br/> 2020-09-08 14:17:45 <br/> <a href='https://www.inaturalist.org/observations/58954163'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Araneus diadematus <br/> 2020-09-08 14:20:07 <br/> <a href='https://www.inaturalist.org/observations/58954192'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Dolichovespula media <br/> 2022-05-24 11:54:15 <br/> <a href='https://www.inaturalist.org/observations/118501993'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Camponotus <br/> 2022-05-24 13:32:52 <br/> <a href='https://www.inaturalist.org/observations/118510640'>Beobachtung auf iNat<\/a>"],null,["Lepidoptera","Lepismachilis","Oemona hirta","Leptoglossus occidentalis","Pholidoptera griseoaptera","Psychidae","Gomphocerippus rufus","Araneus diadematus","Dolichovespula media","Camponotus"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[[47.2343808599,47.1313621569,47.1351806282,47.1313056596,47.1310861111,47.1355388889],[14.9389022402,14.8641349096,14.859630391,14.8641576245,14.8645277778,14.8596055556],10,null,"Wed",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Hannes Oberreiter <br/> Vespula germanica <br/> 2019-04-17 09:15:17 <br/> <a href='https://www.inaturalist.org/observations/22651131'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Ectobiidae <br/> 2019-08-14 05:22:22 <br/> <a href='https://www.inaturalist.org/observations/30935905'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Philodromus aureolus <br/> 2021-06-30 09:02:25 <br/> <a href='https://www.inaturalist.org/observations/85068271'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Misumena vatia <br/> 2022-05-18 14:02:09 <br/> <a href='https://www.inaturalist.org/observations/117590833'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Gnaphosidae <br/> 2022-05-25 09:41:40 <br/> <a href='https://www.inaturalist.org/observations/118626342'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Lepidoptera <br/> 2022-05-25 10:01:55 <br/> <a href='https://www.inaturalist.org/observations/118627281'>Beobachtung auf iNat<\/a>"],null,["Vespula germanica","Ectobiidae","Philodromus aureolus","Misumena vatia","Gnaphosidae","Lepidoptera"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[[47.1351413249,47.1275475528,47.133706701,47.131194235,47.1314255241,47.1355353389,47.234317367,47.1404168272,47.1352308055,47.135475533,47.1312488638,47.13556783],[14.8594044918,14.870857615,14.8607571702,14.8641938387,14.8639780842,14.8592229467,14.9389545433,14.8504451662,14.8596474901,14.8592468351,14.8640496656,14.85911859],10,null,"Thu",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Hannes Oberreiter <br/> Apatura iris <br/> 2016-08-25 08:15:00 <br/> <a href='https://www.inaturalist.org/observations/13266880'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Opilio dinaricus <br/> 2018-08-09 10:53:20 <br/> <a href='https://www.inaturalist.org/observations/15258092'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Araneus diadematus <br/> 2018-08-09 11:54:56 <br/> <a href='https://www.inaturalist.org/observations/15258155'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Apatura iris <br/> 2016-08-25 08:14:00 <br/> <a href='https://www.inaturalist.org/observations/16599100'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Machilidae <br/> 2018-11-01 14:55:52 <br/> <a href='https://www.inaturalist.org/observations/18011249'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Phalangiidae <br/> 2018-11-08 11:25:40 <br/> <a href='https://www.inaturalist.org/observations/18255413'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Neriene montana <br/> 2019-04-25 10:03:44 <br/> <a href='https://www.inaturalist.org/observations/23042818'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Agelena labyrinthica <br/> 2020-07-23 09:05:05 <br/> <a href='https://www.inaturalist.org/observations/54034507'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Lacerta agilis <br/> 2020-07-23 09:09:52 <br/> <a href='https://www.inaturalist.org/observations/54034680'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Himacerus mirmicoides <br/> 2020-09-10 09:41:55 <br/> <a href='https://www.inaturalist.org/observations/59118664'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Araneus diadematus <br/> 2021-07-15 08:22:53 <br/> <a href='https://www.inaturalist.org/observations/87097768'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Melanargia galathea <br/> 2021-08-05 18:21:29 <br/> <a href='https://www.inaturalist.org/observations/90056311'>Beobachtung auf iNat<\/a>"],null,["Apatura iris","Opilio dinaricus","Araneus diadematus","Apatura iris","Machilidae","Phalangiidae","Neriene montana","Agelena labyrinthica","Lacerta agilis","Himacerus mirmicoides","Araneus diadematus","Melanargia galathea"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[[47.1337305475,-36.7822399,-36.782022086,47.1313480753,47.1313319821,47.1400724613,47.1354116713,47.1316669612,47.13618234,47.1313033786,47.1353017378,47.1355574127,47.1355111111,47.134979,47.13146124,47.13555559,49.0068901],[14.8608936276,174.6775634,174.6773994528,14.8640417866,14.8640130367,14.8493863642,14.8594141379,14.8638709635,14.8578048125,14.8640493304,14.860451147,14.8593400419,14.8596666667,14.8573094,14.86417637,14.85926588,8.4036527],10,null,"Fri",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Hannes Oberreiter <br/> Gnaphosa <br/> 2018-06-08 07:55:18 <br/> <a href='https://www.inaturalist.org/observations/13225894'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Drymaplaneta heydeniana <br/> 2018-12-14 21:29:37 <br/> <a href='https://www.inaturalist.org/observations/19037569'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Dermaptera <br/> 2018-12-14 21:30:09 <br/> <a href='https://www.inaturalist.org/observations/19037570'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Vanessa atalanta <br/> 2019-08-23 13:06:57 <br/> <a href='https://www.inaturalist.org/observations/31341254'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Blattodea <br/> 2019-10-11 11:49:34 <br/> <a href='https://www.inaturalist.org/observations/34206747'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Machilinae <br/> 2020-01-24 12:18:31 <br/> <a href='https://www.inaturalist.org/observations/37913384'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Anania hortulata <br/> 2020-05-22 08:48:05 <br/> <a href='https://www.inaturalist.org/observations/46825379'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Anyphaena accentuata <br/> 2020-06-05 13:38:02 <br/> <a href='https://www.inaturalist.org/observations/48535168'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Endomychus coccineus <br/> 2020-06-12 12:51:05 <br/> <a href='https://www.inaturalist.org/observations/49341146'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Chernetidae <br/> 2020-06-12 14:27:17 <br/> <a href='https://www.inaturalist.org/observations/49341181'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Tetropium <br/> 2021-06-04 15:05:22 <br/> <a href='https://www.inaturalist.org/observations/81583173'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Arhopalus rusticus <br/> 2021-07-23 08:11:18 <br/> <a href='https://www.inaturalist.org/observations/88230145'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Vespa crabro <br/> 2022-06-03 14:38:08 <br/> <a href='https://www.inaturalist.org/observations/120027204'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Pholidoptera griseoaptera <br/> 2022-07-01 12:30:29 <br/> <a href='https://www.inaturalist.org/observations/124235430'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Arhopalus rusticus <br/> 2022-07-15 05:30:48 <br/> <a href='https://www.inaturalist.org/observations/126306627'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Amphipyra pyramidea <br/> 2022-08-19 08:25:16 <br/> <a href='https://www.inaturalist.org/observations/131430233'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Dicerca berolinensis <br/> 2022-09-16 12:48:00 <br/> <a href='https://www.inaturalist.org/observations/135369252'>Beobachtung auf iNat<\/a>"],null,["Gnaphosa","Drymaplaneta heydeniana","Dermaptera","Vanessa atalanta","Blattodea","Machilinae","Anania hortulata","Anyphaena accentuata","Endomychus coccineus","Chernetidae","Tetropium","Arhopalus rusticus","Vespa crabro","Pholidoptera griseoaptera","Arhopalus rusticus","Amphipyra pyramidea","Dicerca berolinensis"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[[47.1313576653,47.1274913941,47.1314020129,47.2343192,47.2343754116,47.2343606,47.2344497591,47.2343977494,47.1314121969,47.1351864003,47.1355044989,47.2343685241,47.1356589069,47.1355015339,47.1354903581,47.1355156746,47.1355795362,47.13549122,47.13517546,47.13524568,47.1355904839,47.1321409377,47.133188909,47.1346551325,47.1346551325,47.1346551325,47.1346551325],[14.8640432954,14.870682098,14.8640678544,14.9388426,14.9389164057,14.9390382,14.9388726521,14.9388024118,14.8640015535,14.8595235217,14.8592461646,14.9387230352,14.8596300557,14.8594131321,14.8592464998,14.8594731465,14.8597212508,14.85922581,14.85954011,14.85964332,14.8597601429,14.8632701486,14.860408064,14.8588408157,14.8588408157,14.8588408157,14.8588408157],10,null,"Sat",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Hannes Oberreiter <br/> Philodromus margaritatus <br/> 2017-11-25 10:36:00 <br/> <a href='https://www.inaturalist.org/observations/10205703'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Parasteatoda lunata <br/> 2018-06-30 12:06:17 <br/> <a href='https://www.inaturalist.org/observations/13939338'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Neobisiidae <br/> 2018-09-22 04:10:46 <br/> <a href='https://www.inaturalist.org/observations/16796696'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Dufouriellus ater <br/> 2018-10-13 07:30:44 <br/> <a href='https://www.inaturalist.org/observations/17458628'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Pholcus opilionoides <br/> 2018-10-13 07:34:13 <br/> <a href='https://www.inaturalist.org/observations/17458634'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Vespula germanica <br/> 2018-10-13 07:37:38 <br/> <a href='https://www.inaturalist.org/observations/17458639'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Linyphiidae <br/> 2018-10-13 07:40:56 <br/> <a href='https://www.inaturalist.org/observations/17458642'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Steatoda bipunctata <br/> 2018-10-13 07:43:47 <br/> <a href='https://www.inaturalist.org/observations/17458672'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Arhopalus rusticus <br/> 2019-08-31 12:20:05 <br/> <a href='https://www.inaturalist.org/observations/31841386'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Tomocerus vulgaris <br/> 2019-11-02 09:45:04 <br/> <a href='https://www.inaturalist.org/observations/35192026'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Rhyncolus ater <br/> 2020-02-15 12:30:40 <br/> <a href='https://www.inaturalist.org/observations/38669490'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Neriene montana <br/> 2020-03-21 12:23:34 <br/> <a href='https://www.inaturalist.org/observations/40354996'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Misumena vatia <br/> 2020-04-11 11:38:57 <br/> <a href='https://www.inaturalist.org/observations/41904971'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Anania hortulata <br/> 2020-04-11 12:00:07 <br/> <a href='https://www.inaturalist.org/observations/41904988'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Platystomos albinus <br/> 2020-05-09 15:31:25 <br/> <a href='https://www.inaturalist.org/observations/45371746'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Varroa destructor <br/> 2020-05-09 12:46:07 <br/> <a href='https://www.inaturalist.org/observations/45479151'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Drepanepteryx algida <br/> 2021-03-27 11:44:16 <br/> <a href='https://www.inaturalist.org/observations/72155824'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Nuctenea umbratica <br/> 2021-04-03 09:17:26 <br/> <a href='https://www.inaturalist.org/observations/72764048'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Gnaphosidae <br/> 2021-04-03 09:22:02 <br/> <a href='https://www.inaturalist.org/observations/72764276'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Trichodes apiarius <br/> 2021-06-12 12:23:16 <br/> <a href='https://www.inaturalist.org/observations/82671876'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Thomisidae <br/> 2021-08-07 11:57:02 <br/> <a href='https://www.inaturalist.org/observations/90247166'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Machilidae <br/> 2017-11-25 10:36:00 <br/> <a href='https://www.inaturalist.org/observations/91616088'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Mniotype satura <br/> 2022-10-08 09:34:33 <br/> <a href='https://www.inaturalist.org/observations/137954841'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Anyphaena accentuata <br/> 2022-10-08 10:02:00 <br/> <a href='https://www.inaturalist.org/observations/138137775'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Salticus <br/> 2022-10-08 09:57:00 <br/> <a href='https://www.inaturalist.org/observations/138137777'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Ectobius sylvestris <br/> 2022-10-08 09:40:00 <br/> <a href='https://www.inaturalist.org/observations/138137782'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Agonopterix <br/> 2022-10-08 09:38:00 <br/> <a href='https://www.inaturalist.org/observations/138137787'>Beobachtung auf iNat<\/a>"],null,["Philodromus margaritatus","Parasteatoda lunata","Neobisiidae","Dufouriellus ater","Pholcus opilionoides","Vespula germanica","Linyphiidae","Steatoda bipunctata","Arhopalus rusticus","Tomocerus vulgaris","Rhyncolus ater","Neriene montana","Misumena vatia","Anania hortulata","Platystomos albinus","Varroa destructor","Drepanepteryx algida","Nuctenea umbratica","Gnaphosidae","Trichodes apiarius","Thomisidae","Machilidae","Mniotype satura","Anyphaena accentuata","Salticus","Ectobius sylvestris","Agonopterix"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addCircleMarkers","args":[[47.1353168,47.1345233016,47.0649685152,47.1327400003,47.1336937929,47.1273986064,47.127549774,47.1354641292,47.13120142,47.1352339986,47.1351938568,47.1352369636,47.1346549044,47.1351965937,47.1346549044,47.1314858545,47.1324262796,47.1313371367,47.13137386,47.1313423829,47.1351341002,47.135493095,47.1297450091,47.13126378,47.13121795,47.13133632,47.13511951,47.1354138889,47.1355236],[14.8598449,14.8599713668,15.4873455037,14.8625226798,14.8599321395,14.8708629794,14.870822411,14.859733656,14.8640020564,14.859598875,14.8596411198,14.8595770821,14.8588408157,14.8598070815,14.8588408157,14.8641230911,14.8629637063,14.8639765754,14.8640436307,14.8641512543,14.8595237732,14.8596367612,14.8695810512,14.86404157,14.86401197,14.86408962,14.85963469,14.8593638889,14.85926019],10,null,"Sun",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Hannes Oberreiter <br/> Nuctenea umbratica <br/> 2017-12-24 12:06:00 <br/> <a href='https://www.inaturalist.org/observations/10205887'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Tabanus <br/> 2018-06-10 08:16:27 <br/> <a href='https://www.inaturalist.org/observations/13300594'>Beobachtung auf iNat<\/a>","alexanderweihs <br/> Agelena labyrinthica <br/> 2018-09-16 09:25:54 <br/> <a href='https://www.inaturalist.org/observations/16582286'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Mutilla marginata <br/> 2017-04-16 08:14:00 <br/> <a href='https://www.inaturalist.org/observations/16685882'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Araneus diadematus <br/> 2018-09-23 09:16:30 <br/> <a href='https://www.inaturalist.org/observations/16824497'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Artanes <br/> 2018-09-23 09:38:08 <br/> <a href='https://www.inaturalist.org/observations/16827887'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Philodromus margaritatus <br/> 2019-03-03 12:48:19 <br/> <a href='https://www.inaturalist.org/observations/21079381'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Salticus scenicus <br/> 2020-04-26 11:27:29 <br/> <a href='https://www.inaturalist.org/observations/43635834'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Protaetia cuprea metallica <br/> 2020-05-10 08:15:13 <br/> <a href='https://www.inaturalist.org/observations/45457841'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Aphrodes <br/> 2020-07-12 09:33:07 <br/> <a href='https://www.inaturalist.org/observations/52779388'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Reduvius personatus <br/> 2020-08-02 07:00:31 <br/> <a href='https://www.inaturalist.org/observations/55130299'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Aphrophora alni <br/> 2020-08-16 14:35:57 <br/> <a href='https://www.inaturalist.org/observations/56642716'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Lepismachilis rozsypali <br/> 2020-10-25 12:22:03 <br/> <a href='https://www.inaturalist.org/observations/63477584'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Mitopus morio <br/> 2020-11-08 09:21:33 <br/> <a href='https://www.inaturalist.org/observations/64424148'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Araneus diadematus <br/> 2020-11-22 09:39:20 <br/> <a href='https://www.inaturalist.org/observations/65394705'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Lepismachilis <br/> 2020-11-29 10:43:49 <br/> <a href='https://www.inaturalist.org/observations/65807357'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Psylloidea <br/> 2021-03-14 09:45:08 <br/> <a href='https://www.inaturalist.org/observations/71205822'>Beobachtung auf iNat<\/a>","Anna Dünser <br/> Isotomidae <br/> 2021-03-14 09:51:26 <br/> <a href='https://www.inaturalist.org/observations/71205828'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Machilidae <br/> 2021-03-21 09:00:41 <br/> <a href='https://www.inaturalist.org/observations/71691365'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Anechurinae <br/> 2021-03-21 09:01:12 <br/> <a href='https://www.inaturalist.org/observations/71691373'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Hesium domino <br/> 2021-07-11 10:20:12 <br/> <a href='https://www.inaturalist.org/observations/86535205'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Xysticus <br/> 2021-07-11 11:09:55 <br/> <a href='https://www.inaturalist.org/observations/86538962'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Anania hortulata <br/> 2022-05-08 08:13:03 <br/> <a href='https://www.inaturalist.org/observations/116047648'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Nuctenea umbratica <br/> 2022-05-08 08:13:46 <br/> <a href='https://www.inaturalist.org/observations/116047672'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Melanosmia <br/> 2022-05-08 08:16:03 <br/> <a href='https://www.inaturalist.org/observations/116047810'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Amilenus aurantiacus <br/> 2022-05-08 08:20:18 <br/> <a href='https://www.inaturalist.org/observations/116048080'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Polistes <br/> 2022-05-08 08:47:30 <br/> <a href='https://www.inaturalist.org/observations/116050374'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Buprestis rustica <br/> 2022-06-12 08:56:04 <br/> <a href='https://www.inaturalist.org/observations/121541487'>Beobachtung auf iNat<\/a>","Hannes Oberreiter <br/> Aromia moschata <br/> 2022-07-17 08:13:44 <br/> <a href='https://www.inaturalist.org/observations/126608715'>Beobachtung auf iNat<\/a>"],null,["Nuctenea umbratica","Tabanus","Agelena labyrinthica","Mutilla marginata","Araneus diadematus","Artanes","Philodromus margaritatus","Salticus scenicus","Protaetia cuprea metallica","Aphrodes","Reduvius personatus","Aphrophora alni","Lepismachilis rozsypali","Mitopus morio","Araneus diadematus","Lepismachilis","Psylloidea","Isotomidae","Machilidae","Anechurinae","Hesium domino","Xysticus","Anania hortulata","Nuctenea umbratica","Melanosmia","Amilenus aurantiacus","Polistes","Buprestis rustica","Aromia moschata"],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Mon","Tue","Wed","Thu","Fri","Sat","Sun"],{"collapsed":false,"autoZIndex":true,"position":"topright"}]}],"limits":{"lat":[-36.7822399,49.0068901],"lng":[8.4036527,174.6775634]}},"evals":[],"jsHooks":[]}</script>
+</div>
+</div>
 </section>
 <section id="fun-facts" class="level2">
 <h2 class="anchored" data-anchor-id="fun-facts">Fun Facts</h2>
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb3"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  isBirder <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(class<span class="sc">==</span><span class="st">'Aves'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(user.id, user.name) <span class="sc">|&gt;</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">order_by =</span> n, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  mostDuplicatedObservations <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(user.id, user.name, scientificName) <span class="sc">|&gt;</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">order_by =</span> n, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>  longestName <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">nameLength =</span> <span class="fu">nchar</span>(scientificName)</span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">order_by =</span> nameLength, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  isBirder <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">user.id =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">user.name =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">n =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>  mostDuplicatedObservations <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">user.id =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">user.name =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">scientificName =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">n =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
-<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>  longestName <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">scientificName =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">nameLength =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
-<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  isBirder <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(class<span class="sc">==</span><span class="st">'Aves'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(user.id, user.name) <span class="sc">|&gt;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">order_by =</span> n, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  mostDuplicatedObservations <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(user.id, user.name, scientificName) <span class="sc">|&gt;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">order_by =</span> n, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>  longestName <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>      <span class="at">nameLength =</span> <span class="fu">nchar</span>(scientificName)</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">1</span>, <span class="at">order_by =</span> nameLength, <span class="at">with_ties =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>  isBirder <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">user.id =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">user.name =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">n =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>  mostDuplicatedObservations <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">user.id =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">user.name =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">scientificName =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">n =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>  longestName <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">scientificName =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">nameLength =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>User (auch bekannt als Birder) NA hat NA Beobachtungen hochgeladen - mehr als jede/r andere. Besonders liebt der User bzw. die Userin Hannes Oberreiter die Art <em>Araneus diadematus</em>, die er/sie bereits 4 Mal hochgeladen hat. Das Taxon mit dem längsten Namen ist <em>Protaetia cuprea metallica</em>, das 26 Zeichen lang ist.</p>
@@ -338,23 +457,23 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb4"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  shannonDiversity <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(class <span class="sc">==</span> <span class="st">"Insecta"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>(class, <span class="at">name =</span> <span class="st">'N'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientificName, N) <span class="sc">|&gt;</span> </span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">relFreq =</span> n <span class="sc">/</span> <span class="fu">sum</span>(N),</span>
-<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">logRelFreq =</span> <span class="fu">log</span>(relFreq)</span>
-<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
-<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">shannonDiversity =</span> <span class="sc">-</span><span class="fu">sum</span>(relFreq <span class="sc">*</span> logRelFreq),</span>
-<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">speciesRichness =</span> <span class="fu">first</span>(N)</span>
-<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  shannonDiversity <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">shannonDiversity =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">speciesRichness =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
-<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  shannonDiversity <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(class <span class="sc">==</span> <span class="st">"Insecta"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>(class, <span class="at">name =</span> <span class="st">'N'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientificName, N) <span class="sc">|&gt;</span> </span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">relFreq =</span> n <span class="sc">/</span> <span class="fu">sum</span>(N),</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>      <span class="at">logRelFreq =</span> <span class="fu">log</span>(relFreq)</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    <span class="fu">summarise</span>(</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>      <span class="at">shannonDiversity =</span> <span class="sc">-</span><span class="fu">sum</span>(relFreq <span class="sc">*</span> logRelFreq),</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>      <span class="at">speciesRichness =</span> <span class="fu">first</span>(N)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  shannonDiversity <span class="ot">&lt;-</span> <span class="fu">tibble</span>(<span class="at">shannonDiversity =</span> <span class="fu">c</span>(<span class="dv">0</span>), <span class="at">speciesRichness =</span> <span class="fu">c</span>(<span class="dv">0</span>))</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
 <p>Die Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index <em>H`</em> (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.</p>
@@ -367,15 +486,15 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb5"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(user.id, user.name) <span class="sc">|&gt;</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">'Beob. [#]'</span> <span class="ot">=</span> n, <span class="st">'User'</span> <span class="ot">=</span> user.name) <span class="sc">|&gt;</span></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(user.id, user.name) <span class="sc">|&gt;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">'Beob. [#]'</span> <span class="ot">=</span> n, <span class="st">'User'</span> <span class="ot">=</span> user.name) <span class="sc">|&gt;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-topObserver" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Beobachter/innen mit den meisten Uploads geordnet nach Anzahl der Beobachtungen.">
 <div class="panel-caption table-caption">
@@ -384,8 +503,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1c62e7385c2c2ef91da1" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-1c62e7385c2c2ef91da1">{"x":{"filter":"none","vertical":false,"data":[[98,9,1],["Hannes Oberreiter","Anna Dünser","alexanderweihs"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-35f0ec4f3143e93b0972" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-35f0ec4f3143e93b0972">{"x":{"filter":"none","vertical":false,"data":[[98,9,1],["Hannes Oberreiter","Anna Dünser","alexanderweihs"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -397,16 +516,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb6"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientificName, vernacularName) <span class="sc">|&gt;</span> </span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">'Beob. [#]'</span> <span class="ot">=</span> n, <span class="st">'Wiss. Name'</span> <span class="ot">=</span> scientificName, <span class="st">'Umgangspr. Name'</span> <span class="ot">=</span> vernacularName) <span class="sc">|&gt;</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientificName, vernacularName) <span class="sc">|&gt;</span> </span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">slice_max</span>(<span class="at">n =</span> <span class="dv">10</span>, <span class="at">order_by =</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">'Beob. [#]'</span> <span class="ot">=</span> n, <span class="st">'Wiss. Name'</span> <span class="ot">=</span> scientificName, <span class="st">'Umgangspr. Name'</span> <span class="ot">=</span> vernacularName) <span class="sc">|&gt;</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-topTaxa" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Häufigsten Taxa mit Research-Grade auf Spezies-Ebene geordnet nach Anzahl der Beobachtungen.">
 <div class="panel-caption table-caption">
@@ -415,8 +534,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a093192848b3027b9f6f" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-a093192848b3027b9f6f">{"x":{"filter":"none","vertical":false,"data":[[5,3,3,3,2,2,2,2,2,2,2,2],["Araneus diadematus","Anania hortulata","Arhopalus rusticus","Nuctenea umbratica","Agelena labyrinthica","Anyphaena accentuata","Apatura iris","Misumena vatia","Neriene montana","Philodromus margaritatus","Pholidoptera griseoaptera","Vespula germanica"],["Gartenkreuzspinne","Brennnesselzünsler","Dunkelbrauner Halsgrubenbock, Gr...","Spaltenkreuzspinne","Labyrinthspinne","Vierfleck-Zartspinne","Großer Schillerfalter","Veränderliche Krabbenspinne","Frühlingsgroßweber","Großer Rindenflachstrecker","Gewöhnliche Strauchschrecke, Gem...","Deutsche Wespe"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-026b5c452b3d42cdfc2d" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-026b5c452b3d42cdfc2d">{"x":{"filter":"none","vertical":false,"data":[[5,3,3,3,2,2,2,2,2,2,2,2],["Araneus diadematus","Anania hortulata","Arhopalus rusticus","Nuctenea umbratica","Agelena labyrinthica","Anyphaena accentuata","Apatura iris","Misumena vatia","Neriene montana","Philodromus margaritatus","Pholidoptera griseoaptera","Vespula germanica"],["Gartenkreuzspinne","Brennnesselzünsler","Dunkelbrauner Halsgrubenbock, Gr...","Spaltenkreuzspinne","Labyrinthspinne","Vierfleck-Zartspinne","Großer Schillerfalter","Veränderliche Krabbenspinne","Frühlingsgroßweber","Großer Rindenflachstrecker","Gewöhnliche Strauchschrecke, Gem...","Deutsche Wespe"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -428,16 +547,16 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb7"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>((taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">&amp;</span> quality_grade <span class="sc">==</span> <span class="st">'research'</span>) <span class="sc">|&gt;</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>(scientificName, vernacularName) <span class="sc">|&gt;</span> </span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(n <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">'Wiss. Name'</span> <span class="ot">=</span> scientificName, <span class="st">'Umgangspr. Name'</span> <span class="ot">=</span> vernacularName,  <span class="st">'User'</span> <span class="ot">=</span> user.name) <span class="sc">|&gt;</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>((taxonRank <span class="sc">==</span> <span class="st">'species'</span> <span class="sc">|</span> taxonRank <span class="sc">==</span> <span class="st">'subspecies'</span>) <span class="sc">&amp;</span> quality_grade <span class="sc">==</span> <span class="st">'research'</span>) <span class="sc">|&gt;</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>(scientificName, vernacularName) <span class="sc">|&gt;</span> </span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(n <span class="sc">==</span> <span class="dv">1</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">'Wiss. Name'</span> <span class="ot">=</span> scientificName, <span class="st">'Umgangspr. Name'</span> <span class="ot">=</span> vernacularName,  <span class="st">'User'</span> <span class="ot">=</span> user.name) <span class="sc">|&gt;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-uniqueTaxa" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Einmalige Taxa mit Research-Grade auf Spezies-Ebene inklusive Angabe des Users.">
 <div class="panel-caption table-caption">
@@ -446,8 +565,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-1e75df4235e6853dfe4a" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-1e75df4235e6853dfe4a">{"x":{"filter":"none","vertical":false,"data":[["Philodromus margaritatus","Mutilla marginata","Dufouriellus ater","Pholcus opilionoides","Steatoda bipunctata","Oemona hirta","Formica rufa","Lagria hirta","Vanessa atalanta","Tomocerus vulgaris","Leptoglossus occidentalis","Neriene montana","Platystomos albinus","Varroa destructor","Anyphaena accentuata","Endomychus coccineus","Lacerta agilis","Reduvius personatus","Aphrophora alni","Gomphocerippus rufus","Himacerus mirmicoides","Mitopus morio","Drepanepteryx algida","Trichodes apiarius","Hesium domino","Acherontia atropos","Melanargia galathea","Amilenus aurantiacus","Dolichovespula media","Vespa crabro","Aromia moschata","Apamea lateritia","Mniotype satura","Ectobius sylvestris"],["Großer Rindenflachstrecker",null,null,"Kleine Zitterspinne","Fettspinne",null,"Rote Waldameise","Gemeiner Wollkäfer","Admiral","Goldstreifen Springschwanz","Amerikanische Kiefernwanze, Amer...","Frühlingsgroßweber","Langfühler-Breitrüssler",null,"Vierfleck-Zartspinne","Scharlachroter Stäublingskäfer","Zauneidechse","Staubwanze","Erlenschaumzikade","Rote Keulenschrecke","Ameisen-Sichelwanze","Gemeiner Gebirgsweberknecht",null,"Gemeiner Bienenkäfer, Bienenwolf","Karminzirpe","Totenkopfschwärmer","Schachbrett, Damenbrett","Höhlenlangbein","Mittlere Wespe","Hornisse","Moschusbock","Ziegelrote Grasbüscheleule","Dunkelbraune Waldrandeule","Dunkle Waldschabe, Echte Waldschabe"],["Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Anna Dünser","Anna Dünser"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-8bb1c59a59ebad0b9cb4" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8bb1c59a59ebad0b9cb4">{"x":{"filter":"none","vertical":false,"data":[["Philodromus margaritatus","Mutilla marginata","Dufouriellus ater","Pholcus opilionoides","Steatoda bipunctata","Oemona hirta","Formica rufa","Lagria hirta","Vanessa atalanta","Tomocerus vulgaris","Leptoglossus occidentalis","Neriene montana","Platystomos albinus","Varroa destructor","Anyphaena accentuata","Endomychus coccineus","Lacerta agilis","Reduvius personatus","Aphrophora alni","Gomphocerippus rufus","Himacerus mirmicoides","Mitopus morio","Drepanepteryx algida","Trichodes apiarius","Hesium domino","Acherontia atropos","Melanargia galathea","Amilenus aurantiacus","Dolichovespula media","Vespa crabro","Aromia moschata","Apamea lateritia","Mniotype satura","Ectobius sylvestris"],["Großer Rindenflachstrecker",null,null,"Kleine Zitterspinne","Fettspinne",null,"Rote Waldameise","Gemeiner Wollkäfer","Admiral","Goldstreifen Springschwanz","Amerikanische Kiefernwanze, Amer...","Frühlingsgroßweber","Langfühler-Breitrüssler",null,"Vierfleck-Zartspinne","Scharlachroter Stäublingskäfer","Zauneidechse","Staubwanze","Erlenschaumzikade","Rote Keulenschrecke","Ameisen-Sichelwanze","Gemeiner Gebirgsweberknecht",null,"Gemeiner Bienenkäfer, Bienenwolf","Karminzirpe","Totenkopfschwärmer","Schachbrett, Damenbrett","Höhlenlangbein","Mittlere Wespe","Hornisse","Moschusbock","Ziegelrote Grasbüscheleule","Dunkelbraune Waldrandeule","Dunkle Waldschabe, Echte Waldschabe"],["Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Hannes Oberreiter","Anna Dünser","Anna Dünser"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -459,39 +578,39 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb8"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(quality_grade) <span class="sc">|&gt;</span> </span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">np =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(obsResults),</span>
-<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">quality_grade =</span> forcats<span class="sc">::</span><span class="fu">fct_reorder</span>(quality_grade, np, <span class="at">.desc =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
-<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> quality_grade, <span class="at">y =</span> np, <span class="at">fill =</span> quality_grade) <span class="sc">+</span></span>
-<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">'dodge'</span>, <span class="at">stat=</span><span class="st">'identity'</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"n ="</span>, n)), <span class="at">position=</span><span class="fu">position_dodge</span>(<span class="at">width=</span><span class="fl">0.9</span>), <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
-<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Beobachtungen Qualität [%]"</span>,</span>
-<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">""</span></span>
-<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(),</span>
-<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_flip</span>(<span class="at">clip=</span><span class="st">"off"</span>) <span class="sc">+</span></span>
-<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
-<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>()</span>
-<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(quality_grade) <span class="sc">|&gt;</span> </span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>      <span class="at">np =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(obsResults),</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">quality_grade =</span> forcats<span class="sc">::</span><span class="fu">fct_reorder</span>(quality_grade, np, <span class="at">.desc =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> quality_grade, <span class="at">y =</span> np, <span class="at">fill =</span> quality_grade) <span class="sc">+</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">'dodge'</span>, <span class="at">stat=</span><span class="st">'identity'</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"n ="</span>, n)), <span class="at">position=</span><span class="fu">position_dodge</span>(<span class="at">width=</span><span class="fl">0.9</span>), <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Beobachtungen Qualität [%]"</span>,</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">""</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(),</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_flip</span>(<span class="at">clip=</span><span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>()</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-Quality" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="page_demo_files/figure-html/fig-Quality-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Abbildung&nbsp;2: Verteilung der Beobachtungsqualität auf iNaturalist</figcaption>
+<figcaption class="figure-caption">Abbildung&nbsp;3: Verteilung der Beobachtungsqualität auf iNaturalist</figcaption>
 </figure>
 </div>
 </div>
@@ -502,43 +621,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb9"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(phylum) <span class="sc">|&gt;</span> </span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(phylum) <span class="sc">|&gt;</span> </span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">np =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(obsResults),</span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">phylum =</span> forcats<span class="sc">::</span><span class="fu">fct_reorder</span>(phylum, np, <span class="at">.desc =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
-<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
-<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> phylum, <span class="at">y =</span> np, <span class="at">fill =</span> np) <span class="sc">+</span></span>
-<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">'dodge'</span>, <span class="at">stat=</span><span class="st">'identity'</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"n ="</span>, n)), <span class="at">position=</span><span class="fu">position_dodge</span>(<span class="at">width=</span><span class="fl">0.9</span>), <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
-<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
-<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Beobachtungen Phyla [%]"</span>,</span>
-<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">""</span></span>
-<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_fill_viridis_c</span>(</span>
-<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">option =</span> <span class="st">"turbo"</span>,</span>
-<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
-<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(),</span>
-<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
-<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
-<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_flip</span>(<span class="at">clip=</span><span class="st">"off"</span>) <span class="sc">+</span></span>
-<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>()</span>
-<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>      )</span>
-<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(phylum) <span class="sc">|&gt;</span> </span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(phylum) <span class="sc">|&gt;</span> </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(<span class="fu">desc</span>(n)) <span class="sc">|&gt;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>      <span class="at">np =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(obsResults),</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>      <span class="at">phylum =</span> forcats<span class="sc">::</span><span class="fu">fct_reorder</span>(phylum, np, <span class="at">.desc =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span> </span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>() <span class="sc">+</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>      <span class="fu">aes</span>(<span class="at">x =</span> phylum, <span class="at">y =</span> np, <span class="at">fill =</span> np) <span class="sc">+</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_bar</span>(<span class="at">position =</span> <span class="st">'dodge'</span>, <span class="at">stat=</span><span class="st">'identity'</span>, <span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>      <span class="fu">geom_text</span>(<span class="fu">aes</span>(<span class="at">label=</span><span class="fu">paste</span>(<span class="st">"n ="</span>, n)), <span class="at">position=</span><span class="fu">position_dodge</span>(<span class="at">width=</span><span class="fl">0.9</span>), <span class="at">hjust=</span><span class="sc">-</span><span class="fl">0.25</span>) <span class="sc">+</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>      <span class="fu">labs</span>(</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Beobachtungen Phyla [%]"</span>,</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="st">""</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">option =</span> <span class="st">"turbo"</span>,</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>      <span class="fu">scale_y_continuous</span>(</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">percent_format</span>(),</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">limits =</span> <span class="fu">c</span>(<span class="dv">0</span>, <span class="dv">1</span>)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>      ) <span class="sc">+</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>      <span class="fu">coord_flip</span>(<span class="at">clip=</span><span class="st">"off"</span>) <span class="sc">+</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>      <span class="fu">theme</span>(</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>()</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>      )</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-Phylum" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="page_demo_files/figure-html/fig-Phylum-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Abbildung&nbsp;3: Relative und absolute Anzahl der Beobachtungen pro Phylum</figcaption>
+<figcaption class="figure-caption">Abbildung&nbsp;4: Relative und absolute Anzahl der Beobachtungen pro Phylum</figcaption>
 </figure>
 </div>
 </div>
@@ -549,43 +668,43 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="cell">
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb10"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>  obsInsecta <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span> </span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(class <span class="sc">==</span> <span class="st">"Insecta"</span>) <span class="sc">|&gt;</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(order)</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  obsInsecta <span class="sc">|&gt;</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(order) <span class="sc">|&gt;</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">p =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(obsInsecta),</span>
-<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">order =</span> forcats<span class="sc">::</span><span class="fu">fct_reorder</span>(order, p, <span class="at">.desc =</span> <span class="cn">TRUE</span>)</span>
-<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
-<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> order, <span class="at">x =</span> p, <span class="at">label =</span> n, <span class="at">fill =</span> p)) <span class="sc">+</span></span>
-<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
-<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">nudge_x =</span> <span class="fl">0.01</span>, <span class="at">check_overlap =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
-<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(</span>
-<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(),</span>
-<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()</span>
-<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>(</span>
-<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">option =</span> <span class="st">"turbo"</span>,</span>
-<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
-<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Insecta - Ordnung"</span>,</span>
-<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">glue</span>(<span class="st">"Beobachtungen (# = {nrow(obsInsecta)}) [%]"</span>)</span>
-<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
-<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
-<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>()</span>
-<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    )</span>
-<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  obsInsecta <span class="ot">&lt;-</span> obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(class <span class="sc">==</span> <span class="st">"Insecta"</span>) <span class="sc">|&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(order)</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>  obsInsecta <span class="sc">|&gt;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(order) <span class="sc">|&gt;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">mutate</span>(</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>        <span class="at">p =</span> n <span class="sc">/</span> <span class="fu">nrow</span>(obsInsecta),</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="at">order =</span> forcats<span class="sc">::</span><span class="fu">fct_reorder</span>(order, p, <span class="at">.desc =</span> <span class="cn">TRUE</span>)</span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">|&gt;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>    <span class="fu">ggplot</span>(<span class="fu">aes</span>(<span class="at">y =</span> order, <span class="at">x =</span> p, <span class="at">label =</span> n, <span class="at">fill =</span> p)) <span class="sc">+</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_col</span>(<span class="at">show.legend =</span> <span class="cn">FALSE</span>) <span class="sc">+</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="fu">geom_text</span>(<span class="at">nudge_x =</span> <span class="fl">0.01</span>, <span class="at">check_overlap =</span> <span class="cn">TRUE</span>) <span class="sc">+</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_x_continuous</span>(</span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>        <span class="at">breaks =</span> scales<span class="sc">::</span><span class="fu">pretty_breaks</span>(),</span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        <span class="at">labels =</span> scales<span class="sc">::</span><span class="fu">label_percent</span>()</span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="fu">scale_fill_viridis_c</span>(</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>      <span class="at">option =</span> <span class="st">"turbo"</span>,</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="fu">labs</span>(</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="at">y =</span> <span class="st">"Insecta - Ordnung"</span>,</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="at">x =</span> <span class="fu">glue</span>(<span class="st">"Beobachtungen (# = {nrow(obsInsecta)}) [%]"</span>)</span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>    ) <span class="sc">+</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="fu">theme</span>(</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">panel.grid.major.x =</span> <span class="fu">element_line</span>()</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
 <div id="fig-Insecta" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="page_demo_files/figure-html/fig-Insecta-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Abbildung&nbsp;4: Ordnungen innerhalb der Klasse Insecta und deren relative und absolute Anzahl an Beobachtungen.</figcaption>
+<figcaption class="figure-caption">Abbildung&nbsp;5: Ordnungen innerhalb der Klasse Insecta und deren relative und absolute Anzahl an Beobachtungen.</figcaption>
 </figure>
 </div>
 </div>
@@ -596,14 +715,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb11"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(num_identification_disagreements <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(uri, <span class="st">"User"</span> <span class="ot">=</span> user.name, <span class="st">"Taxa"</span> <span class="ot">=</span> scientificName) <span class="sc">|&gt;</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb14"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>  obsResults <span class="sc">|&gt;</span> </span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">filter</span>(num_identification_disagreements <span class="sc">&gt;</span> <span class="dv">0</span>) <span class="sc">|&gt;</span> </span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(uri, <span class="st">"User"</span> <span class="ot">=</span> user.name, <span class="st">"Taxa"</span> <span class="ot">=</span> scientificName) <span class="sc">|&gt;</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-Conflict" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Beobachtungen wo User unterschiedlicher Meinung zum beobachteten Taxon sind.">
 <div class="panel-caption table-caption">
@@ -612,8 +731,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-6960136a905082dfe970" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-6960136a905082dfe970">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>uri<\/th>\n      <th>User<\/th>\n      <th>Taxa<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-2e0c1226747874c0caef" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-2e0c1226747874c0caef">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>uri<\/th>\n      <th>User<\/th>\n      <th>Taxa<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -625,18 +744,18 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb12"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>  checkList <span class="sc">|&gt;</span> </span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(obsResults, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"scientific_name"</span> <span class="ot">=</span> <span class="st">"scientificName"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(annex_II) <span class="sc">|&gt;</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>(scientific_name) <span class="sc">|&gt;</span> </span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientific_name, vernacularName, annex_II_priority, annex_II, annex_IV) <span class="sc">|&gt;</span> </span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(scientific_name) <span class="sc">|&gt;</span> </span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">"Wiss. Name"</span> <span class="ot">=</span> scientific_name, <span class="st">"Umgangspr. Name"</span> <span class="ot">=</span> vernacularName, annex_II_priority, annex_II, annex_IV, <span class="st">"Beob. (#)"</span> <span class="ot">=</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb15"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>  checkList <span class="sc">|&gt;</span> </span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(obsResults, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"scientific_name"</span> <span class="ot">=</span> <span class="st">"scientificName"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(annex_II) <span class="sc">|&gt;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">add_count</span>(scientific_name) <span class="sc">|&gt;</span> </span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientific_name, vernacularName, annex_II_priority, annex_II, annex_IV) <span class="sc">|&gt;</span> </span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(scientific_name) <span class="sc">|&gt;</span> </span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">"Wiss. Name"</span> <span class="ot">=</span> scientific_name, <span class="st">"Umgangspr. Name"</span> <span class="ot">=</span> vernacularName, annex_II_priority, annex_II, annex_IV, <span class="st">"Beob. (#)"</span> <span class="ot">=</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-CheckList" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Beobachtungen die zumindest in einem EU Land auf der Roten Liste stehen inklusive Anzahl der Beobachtungen.">
 <div class="panel-caption table-caption">
@@ -645,8 +764,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-7b878f10589be220f8ca" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-7b878f10589be220f8ca">{"x":{"filter":"none","vertical":false,"data":[["Lacerta agilis"],["Zauneidechse"],["N"],["N"],["Y"],[1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>annex_II_priority<\/th>\n      <th>annex_II<\/th>\n      <th>annex_IV<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-29fb5145324e1dc0da66" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-29fb5145324e1dc0da66">{"x":{"filter":"none","vertical":false,"data":[["Lacerta agilis"],["Zauneidechse"],["N"],["N"],["Y"],[1]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>annex_II_priority<\/th>\n      <th>annex_II<\/th>\n      <th>annex_IV<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -654,17 +773,17 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div>
 <details>
 <summary>Code</summary>
-<div class="sourceCode cell-code" id="cb13"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>  birdsList <span class="sc">|&gt;</span> </span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(obsResults, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"scientific_name"</span> <span class="ot">=</span> <span class="st">"scientificName"</span>)) <span class="sc">|&gt;</span></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(AnnexI) <span class="sc">|&gt;</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(scientific_name) <span class="sc">|&gt;</span> </span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientific_name, vernacularName, AnnexI) <span class="sc">|&gt;</span> </span>
-<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">"Wiss. Name"</span> <span class="ot">=</span> scientific_name, <span class="st">"Umgangspr. Name"</span> <span class="ot">=</span> vernacularName, AnnexI, <span class="st">"Beob. (#)"</span> <span class="ot">=</span> n) <span class="sc">|&gt;</span></span>
-<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
-<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
-<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
-<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
+<div class="sourceCode cell-code" id="cb16"><pre class="sourceCode r code-with-copy"><code class="sourceCode r"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span>(<span class="sc">!</span><span class="fu">is.null</span>(obsResults)){</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>  birdsList <span class="sc">|&gt;</span> </span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="fu">right_join</span>(obsResults, <span class="at">by =</span> <span class="fu">c</span>(<span class="st">"scientific_name"</span> <span class="ot">=</span> <span class="st">"scientificName"</span>)) <span class="sc">|&gt;</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    <span class="fu">drop_na</span>(AnnexI) <span class="sc">|&gt;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="fu">arrange</span>(scientific_name) <span class="sc">|&gt;</span> </span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="fu">count</span>(scientific_name, vernacularName, AnnexI) <span class="sc">|&gt;</span> </span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="fu">select</span>(<span class="st">"Wiss. Name"</span> <span class="ot">=</span> scientific_name, <span class="st">"Umgangspr. Name"</span> <span class="ot">=</span> vernacularName, AnnexI, <span class="st">"Beob. (#)"</span> <span class="ot">=</span> n) <span class="sc">|&gt;</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="fu">datatable</span>(<span class="at">rownames =</span> <span class="cn">FALSE</span>)</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>} <span class="cf">else</span> {</span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div id="tbl-BirdsList" class="cell tbl-parent quarto-layout-panel anchored" data-tbl-cap="Vogel Beobachtungen die zumindest in einem EU Land auf der Roten Liste AnnexI stehen inklusive Anzahl der Beobachtungen.">
 <div class="panel-caption table-caption">
@@ -673,8 +792,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-3d2807781aafa367b988" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-3d2807781aafa367b988">{"x":{"filter":"none","vertical":false,"data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>AnnexI<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-8d31134107cd2402b3be" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-8d31134107cd2402b3be">{"x":{"filter":"none","vertical":false,"data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>AnnexI<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
