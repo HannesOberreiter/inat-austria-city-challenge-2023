@@ -17,6 +17,8 @@ website:
       - icon: person-lines-fill
         text: ""
         file: page_about.qmd
+      - icon: github
+        href: "https://github.com/HannesOberreiter/inat-austria-city-challenge-2023"
     left:
       - file: index.qmd
         text: "Übersicht"
