@@ -57,7 +57,7 @@ if(!is.null(obsResults)){
   obsResults |> 
     drop_na(time_observed_at) |>
     mutate(
-      time_observed_at = lubridate::ymd_hms(time_observed_at, tz = "Europe/Vienna"),
+      time_observed_at = lubridate::ymd_hms(time_observed_at, tz = "Europe/Vienna", quiet = TRUE),
       hour_observed_at = hms::as_hms(time_observed_at),
       weekday_observed_at = lubridate::wday(
         time_observed_at, 
