@@ -50,6 +50,46 @@ if(!is.null(obsResults)){
 }
 ```
 
+```{r plotUserTime}
+#| label: fig-time
+#| fig-cap: "In welcher Stunde an welchen Wochentag wie viele Beobachtungen gemacht wurden"
+if(!is.null(obsResults)){
+  obsResults |> 
+    drop_na(time_observed_at) |>
+    mutate(
+      time_observed_at = lubridate::ymd_hms(time_observed_at, tz = "Europe/Vienna"),
+      hour_observed_at = hms::as_hms(time_observed_at),
+      weekday_observed_at = lubridate::wday(
+        time_observed_at, 
+        label = TRUE,
+        week_start = 1,
+        locale="de_AT"
+        )
+    ) |>
+    select(time_observed_at, weekday_observed_at, hour_observed_at)  |>
+    ggplot(aes(x = hour_observed_at, fill = weekday_observed_at)) +
+    geom_histogram(binwidth = 60*60, color = 'black') +
+    labs(
+      x = 'Stunde',
+      y = 'Anzahl Beobachtungen',
+      fill = 'Wochentag'
+    ) +
+    scale_y_continuous(
+      breaks = scales::pretty_breaks(),
+    ) +
+    scale_x_time(
+      breaks = scales::breaks_width("1 hour"),
+      labels = scales::label_time(format = "%H")
+    ) +
+    theme(
+      panel.grid.major.y = element_line()
+    ) + 
+    facet_wrap(~weekday_observed_at, ncol = 1)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
 ## Fun Facts
   
 ```{r funFacts}
