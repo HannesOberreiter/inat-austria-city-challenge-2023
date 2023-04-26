@@ -14,6 +14,9 @@ jobs:
       - name: Check out repository
         uses: actions/checkout@v2
 
+      - name: Add locale
+        run: sudo locale-gen de_AT && sudo locale-gen de_AT.UTF-8 && sudo update-locale
+
       - name: Set up Quarto
         uses: quarto-dev/quarto-actions/setup@v2
 
@@ -22,7 +25,7 @@ jobs:
         with:
           r-version: "4.2.0"
 
-      - name: Install gdal depencies for terra (leaflet)
+      - name: Install gdal dependencies for terra (leaflet)
         run: sudo apt-get install libgdal-dev libgeos-dev libproj-dev
 
       - name: Install R Dependencies
