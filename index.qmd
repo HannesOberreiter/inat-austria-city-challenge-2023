@@ -2,7 +2,6 @@
 title: "City Nature Challenges in Österreich, 28. April – 1. Mai 2023"
 lang: 'de-AT'
 execute:
-  echo: false
   waring: false
   error: false
 order: 1
