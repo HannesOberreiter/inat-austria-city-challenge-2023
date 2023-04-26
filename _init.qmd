@@ -11,6 +11,7 @@ library(stringr)
 library(rmarkdown)
 library(DT)
 library(lubridate)
+library(leaflet)
 
 theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(

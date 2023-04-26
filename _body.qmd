@@ -90,6 +90,52 @@ if(!is.null(obsResults)){
 }
 ```
 
+## Beobachtungskarte
+
+```{r mapObs}
+if(!is.null(obsResults)){
+  mapDf <- obsResults |>
+    drop_na(location, time_observed_at) |>
+    separate(location, c('latitude', 'longitude'), sep = ',', remove = FALSE, convert = TRUE) |>
+    mutate(
+      label = glue("{user.name} <br/> {scientificName} <br/> {time_observed_at} <br/> <a href='{uri}'>Beobachtung auf iNat</a>"),
+      group = lubridate::wday(
+        time_observed_at, 
+        label = TRUE,
+        week_start = 1,
+        locale="de_AT"
+      )
+    )
+  mapDfSplit <- split(mapDf, mapDf$group)
+
+  m <- leaflet() |> # create map with dataset
+    setView(lng = 14.12456, lat = 47.59397, zoom = 8) |> # fyi geographic center of austria
+    addTiles()
+
+
+  for(name in names(mapDfSplit)){
+    m <- m |>
+      addCircleMarkers(
+        data = mapDfSplit[[name]],
+        lng = ~longitude,
+        lat = ~latitude,
+        popup = ~label,
+        label = ~scientificName,
+        group = name,
+        clusterOptions = markerClusterOptions()
+      )
+  }
+  m |>
+    addLayersControl(
+      overlayGroups = names(mapDfSplit),
+      options = layersControlOptions(collapsed = FALSE)
+    )
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+
 ## Fun Facts
   
 ```{r funFacts}
