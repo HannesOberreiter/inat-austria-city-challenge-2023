@@ -32,29 +32,36 @@ for(i in 1:length(projectIds)){
   }
 }
 obsResults <- bind_rows(obsResultsList)
+if(nrow(obsResults) == 0){
+  obsResults = NULL
+}
 ```
 
 ```{r CompareProjects}
 #| label: fig-projects
 #| fig-cap: "Anzahl der Beobachtungen in den einzelnen Projekt Regionen"
-
-obsResults |>
-  group_by(project.name) |>
-  summarise(n = n()) |>
-  ggplot(
-    aes(x = reorder(project.name, n), y = n, fill = project.name)
-    ) +
-  geom_bar(stat = "identity", show.legend = FALSE) +
-  coord_flip() +
-  labs(x = "", y = "Anzahl der Beobachtungen")+
-  theme(
-    panel.grid.major.x = element_line()
-  )
+if(!is.null(obsResults)){
+  obsResults |>
+    group_by(project.name) |>
+    summarise(n = n()) |>
+    ggplot(
+      aes(x = reorder(project.name, n), y = n, fill = project.name)
+      ) +
+    geom_bar(stat = "identity", show.legend = FALSE) +
+    coord_flip() +
+    labs(x = "", y = "Anzahl der Beobachtungen")+
+    theme(
+      panel.grid.major.x = element_line()
+    )
+} else {
+  print('Noch keine Beobachtungen')
+}
 ```
 
 ## Indizes zwischen den Regionen
 
 ```{r CompareProjects2}
+if(!is.null(obsResults)){
   obsResults |>
     group_by(project.name) |>
     summarise(
@@ -65,6 +72,9 @@ obsResults |>
       ) |>
     select("Region" = project.name, "BeobachterIn" = nObserver, "Beobachtungen" = nObservations, "Taxa" = nTaxa, "Research Grade" = nResearchGrade) |>
     datatable(rownames = FALSE)
+} else {
+  print('Noch keine Beobachtungen')
+}
 ```
 
 ## Beobachtungen Regnum
