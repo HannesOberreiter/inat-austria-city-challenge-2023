@@ -22,8 +22,6 @@ website:
     left:
       - file: index.qmd
         text: "Übersicht"
-      - file: page_demo.qmd
-        text: "Demo Datensatz"
       - text: "Regionen"
         menu:
           - file: page_graz.qmd

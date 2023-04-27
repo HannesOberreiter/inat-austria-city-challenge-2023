@@ -22,7 +22,7 @@ date-format: "YYYY-MM-DDTHH:mm:ssZ"
 ```{r init}
 #| include: false
 #! cache: false
-projectIds <- c("Amstetten" = "155713", "Graz" = "148063", "Industrieviertel" = "156486", "Innsbruck" = "156501", "Klagenfurt" = "148013", "Krems" = "147007", "Gesäuse" = "148580", "Neusiedlersee" = "154309", "Demo" = "27173")
+projectIds <- c("Amstetten" = "155713", "Graz" = "148063", "Industrieviertel" = "156486", "Innsbruck" = "156501", "Klagenfurt" = "148013", "Krems" = "147007", "Gesäuse" = "148580", "Neusiedlersee" = "154309")
 obsResultsList <- list()
 for(i in 1:length(projectIds)){
   tempResult <- loadObs(projectIds[i])
