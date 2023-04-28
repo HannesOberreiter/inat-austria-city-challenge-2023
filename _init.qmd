@@ -34,20 +34,20 @@ checkList <- read_csv("data/data_species_check_list.csv", show_col_types = FALSE
     distinct(scientific_name, .keep_all = TRUE) |>
     filter((annex_II_priority != "N" | annex_II != "N" | annex_IV != "N")) 
 # Birds RedList
-birdsList <- read_csv2("data/birds.csv", show_col_types = FALSE) |>
+birdsList <- read_csv2("data/birds.csv", show_col_types = FALSE, col_types = cols(.default = "c")) |>
     rename_with(~"scientific_name", 1) |>
     select(scientific_name, `Annex I`) |>
     rename(AnnexI = `Annex I`) |>
     drop_na(AnnexI)
 # German Common Names
-taxasDE <- read_csv('data/VernacularNames-german.csv', show_col_types = FALSE) |> 
+taxasDE <- read_csv('data/VernacularNames-german.csv', show_col_types = FALSE, col_types = cols(.default = "c")) |> 
     group_by(id) |> 
     summarise(
       vernacularName =  paste(vernacularName, collapse = ', ') |>
                         stringr::str_trunc(35)
     )
 # Full Taxon Tree Names
-taxas <- read_csv('data/taxa.csv', show_col_types = FALSE) |> 
+taxas <- read_csv('data/taxa.csv', show_col_types = FALSE, col_types = cols(.default = "c")) |> 
     left_join(taxasDE, by = "id") |> 
     select(id, scientificName, vernacularName, taxonRank, kingdom:infraspecificEpithet)
 
@@ -88,7 +88,7 @@ loadObs <- function(projectId, maxLoops = 200){
         obsTempResults <- obsFetch$results |> unnest(c(taxon, user), names_sep = ".")
         aboveId = max(obsTempResults$id)
         obsList[[loopCounter]] <- obsTempResults |>
-          mutate(across(everything(), as.character(.)))
+          mutate(across(everything(), as.character))
         
         if(totalResults <= perPage){
           print("No more fetches needed")
