@@ -256,8 +256,15 @@ if(!is.null(obsResults)){
     filter((taxonRank == 'species' | taxonRank == 'subspecies') & quality_grade == 'research') |>
     add_count(scientificName, vernacularName) |> 
     filter(n == 1) |> 
-    select('Wiss. Name' = scientificName, 'Umgangspr. Name' = vernacularName,  'User' = user.name) |>
-    datatable(rownames = FALSE)
+    select('Wiss. Name' = scientificName, 'Umgangspr. Name' = vernacularName,  'User' = user.name, "Link" = uri_html) |>
+    datatable(
+      rownames = FALSE, 
+      escape = FALSE,
+      options = list(
+        columnDefs = list(list(type = 'html', targets = c(3)
+        )
+      )
+))
 } else {
   print('Noch keine Beobachtungen')
 }
@@ -383,8 +390,14 @@ if(!is.null(obsResults)){
 if(!is.null(obsResults)){
   obsResults |> 
     filter(num_identification_disagreements > 0) |> 
-    select(uri, "User" = user.name, "Taxa" = scientificName) |>
-    datatable(rownames = FALSE)
+    select(link = uri_html, "User" = user.name, "Taxa" = scientificName) |>
+    datatable(
+      rownames = FALSE,
+      escape = FALSE,
+      options = list(
+        columnDefs = list(list(type = 'html', targets = c(3)))
+      )
+    )
 } else {
   print('Noch keine Beobachtungen')
 }

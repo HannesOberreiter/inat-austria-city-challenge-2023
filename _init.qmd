@@ -118,7 +118,8 @@ loadObs <- function(projectId, maxLoops = 200){
         mutate(
           user.name = ifelse(is.na(user.name) | user.name == '', user.login, user.name),
           project.id = projectId,
-          project.name = names(projectId)
+          project.name = names(projectId),
+          uri_html = glue("<a href='{uri}'>{id}</a>"),
         ) |>
         distinct(uuid, .keep_all = TRUE) # catch any possible double entries due to our loop logic
       return(obsResults)
