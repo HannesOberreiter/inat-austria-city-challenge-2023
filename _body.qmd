@@ -120,7 +120,7 @@ if(!is.null(obsResults)){
   mapDfSplit <- split(mapDf, mapDf$group)
 
   m <- leaflet() |> # create map with dataset
-    setView(lng = 14.12456, lat = 47.59397, zoom = 8) |> # fyi geographic center of austria
+    setView(lng = 14.12456, lat = 47.59397, zoom = 6) |> # fyi geographic center of austria
     addTiles()
 
 
