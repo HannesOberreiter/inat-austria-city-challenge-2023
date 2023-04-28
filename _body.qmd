@@ -225,6 +225,48 @@ if(!is.null(obsResults)){
 }
 ```
 
+## Top Bestimmer/Innen
+
+Die erhobenen Beobachtungen werden erst durch die unerschöpfliche Arbeit der Bestimmer/innen zu wertvollen Daten. An dieser Stelle ein großes Dankeschön an alle Bestimmer/innen ohne euch wäre iNaturalist nicht das, was es heute ist.
+
+```{r tableTopIdentifier}
+# This function could (should) be vectorized to speed up the process
+getIdentifierAsVector <- function(identifications, observerId){
+  if(!is.null(identifications) & identifications != 'list()'){
+    parsedList <- eval(parse(text=identifications))
+    identifiers <- parsedList$user |>
+      as_tibble() |>
+      filter(id != observerId) |>
+      mutate(
+        name = ifelse(is.na(name), login, paste(login, ' (', name, ')', sep = ''))
+      ) |>
+      pull(name)
+    if(length(identifiers) == 0){
+      identifiers <- c("")
+    }
+    return(identifiers)
+  } else {
+    return(c(""))
+  }
+}
+if(!is.null(obsResults)){
+  obsResults |>
+    mutate(
+      identifiers = furrr::future_map2(identifications, user.id, getIdentifierAsVector)
+    ) |>
+    pull(identifiers) |>
+    unlist() |>
+    as_tibble() |>
+    filter(value != "") |>
+    count(value) |>
+    arrange(desc(n)) |>
+    select('Bestimmungen [#]' = n, 'Bestimmer/In' = value) |>
+    datatable(rownames = FALSE)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
 ## Top Beobachter/innen mit den meisten unterschiedlichen Arten
 
 Nur Beobachtungen zumindest auf Spezies-Ebene und Research-Grade werden gezählt. 

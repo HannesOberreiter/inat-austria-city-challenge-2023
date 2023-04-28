@@ -13,6 +13,7 @@ library(DT)
 library(lubridate)
 library(leaflet)
 library(data.table)
+library(furrr)
 
 theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(
@@ -73,7 +74,7 @@ loadObs <- function(projectId, maxLoops = 200){
         return(obsResults)
       }
       apiEndpoint <- "https://api.inaturalist.org/v2/observations"
-      fields <- "(id:!t,uri:!t,quality_grade:!t,num_identification_disagreements:!t,time_observed_at:!t,location:!t,user:(name:!t,id:!t,login:!t),taxon:(id:!t))"
+      fields <- "(id:!t,uri:!t,quality_grade:!t,num_identification_disagreements:!t,time_observed_at:!t,location:!t,user:(name:!t,id:!t,login:!t),taxon:(id:!t),identifications:(user:(name:!t,login:!t)))"
       perPage <- 200
       staticQuery <- glue("project_id={projectId}&order=asc&order_by=id&per_page={perPage}&fields={fields}")
       
