@@ -207,7 +207,7 @@ In unserem Datensatz können wir den Shannon-Index *H`* für die Ordnung Insecta
 
 Zusätzlich können wir mit diesen Kennzahlen den Evenness-Index berechnen, der in unserem Fall **`r round(shannonDiversity$shannonDiversity[1] / log(shannonDiversity$speciesRichness[1]), 2)`** ist.
 
-## Top 10 Beobachter/innen
+## Top Beobachter/innen
 
 In dieser Liste werden auch doppelte Beobachtungen gezählt, jedoch sollte dies nicht als Tipp betrachtet werden, um an erster Stelle zu stehen.
 
@@ -219,14 +219,14 @@ In dieser Liste werden auch doppelte Beobachtungen gezählt, jedoch sollte dies 
 if(!is.null(obsResults)){
   obsResults |> 
     count(user.id, user.name) |>
-    slice_max(n = 10, order_by = n) |>
+    arrange(desc(n)) |>
     select('Beob. [#]' = n, 'User' = user.name) |>
     datatable(rownames = FALSE)
 } else {
   print('Noch keine Beobachtungen')
 }
 ```
-## Top 10 Taxa (Spezies-Ebene)
+## Top Taxa (Spezies-Ebene)
 
 In dieser Liste sind die am häufigsten beobachteten Taxa auf Spezies-Ebene aufgeführt, die bereits identifiziert wurden. Es ist jedoch nicht erforderlich, dass diese von einer zweiten Person bestätigt wurden, um den Forschungsstandard (Research-Grade) zu erreichen.
 
@@ -237,7 +237,7 @@ if(!is.null(obsResults)){
   obsResults |> 
     filter(taxonRank == 'species' | taxonRank == 'subspecies') |>
     count(scientificName, vernacularName) |> 
-    slice_max(n = 10, order_by = n) |>
+    arrange(desc(n)) |>
     select('Beob. [#]' = n, 'Wiss. Name' = scientificName, 'Umgangspr. Name' = vernacularName) |>
     datatable(rownames = FALSE)
 } else {
