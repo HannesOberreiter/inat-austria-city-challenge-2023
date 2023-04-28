@@ -12,6 +12,7 @@ library(rmarkdown)
 library(DT)
 library(lubridate)
 library(leaflet)
+library(data.table)
 
 theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(
@@ -29,25 +30,29 @@ options(ggplot2.discrete.fill = colorBlindBlack8)
 #| cache: true
 
 # RedList
-checkList <- read_csv("data/data_species_check_list.csv", show_col_types = FALSE) |>
+checkList <- fread(
+      "data/data_species_check_list.csv", sep = ",", dec=".", stringsAsFactors = FALSE, encoding = "UTF-8", colClasses = "character"
+    ) |>
     rename(scientific_name = speciesname) |>
     distinct(scientific_name, .keep_all = TRUE) |>
     filter((annex_II_priority != "N" | annex_II != "N" | annex_IV != "N")) 
 # Birds RedList
-birdsList <- read_csv2("data/birds.csv", show_col_types = FALSE, col_types = cols(.default = "c")) |>
+birdsList <- fread("data/birds.csv", sep = ";", dec=".", stringsAsFactors = FALSE, encoding = "UTF-8", colClasses = "character") |>
     rename_with(~"scientific_name", 1) |>
     select(scientific_name, `Annex I`) |>
     rename(AnnexI = `Annex I`) |>
     drop_na(AnnexI)
 # German Common Names
-taxasDE <- read_csv('data/VernacularNames-german.csv', show_col_types = FALSE, col_types = cols(.default = "c")) |> 
+taxasDE <- fread(
+      'data/VernacularNames-german.csv', sep = ",", dec=".", stringsAsFactors = FALSE, encoding = "UTF-8", colClasses = "character"
+    ) |> 
     group_by(id) |> 
     summarise(
       vernacularName =  paste(vernacularName, collapse = ', ') |>
                         stringr::str_trunc(35)
     )
 # Full Taxon Tree Names
-taxas <- read_csv('data/taxa.csv', show_col_types = FALSE, col_types = cols(.default = "c")) |> 
+taxas <- fread('data/taxa.csv', sep = ",", dec=".", stringsAsFactors = FALSE, encoding = "UTF-8", colClasses = "character") |> 
     left_join(taxasDE, by = "id") |> 
     select(id, scientificName, vernacularName, taxonRank, kingdom:infraspecificEpithet)
 
@@ -62,7 +67,9 @@ loadObs <- function(projectId, maxLoops = 200){
       checkIfFileExists <- file.exists(glue("data/obs_{projectId}.csv"))
       if(checkIfFileExists){
         print("File exists, loading from file")
-        obsResults <- read_csv(glue("data/obs_{projectId}.csv"), show_col_types = FALSE, col_types = cols(.default = "c"))
+        obsResults <- fread(
+          glue("data/obs_{projectId}.csv"), sep = ",", dec=".", stringsAsFactors = FALSE, encoding = "UTF-8", colClasses = "character"
+        )
         return(obsResults)
       }
       apiEndpoint <- "https://api.inaturalist.org/v2/observations"

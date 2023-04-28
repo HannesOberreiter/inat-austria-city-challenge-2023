@@ -226,6 +226,17 @@
       ],
       "Hash": "6aa54f69598c32177e920eb3402e8293"
     },
+    "data.table": {
+      "Package": "data.table",
+      "Version": "1.14.8",
+      "Source": "Repository",
+      "Repository": "CRAN",
+      "Requirements": [
+        "R",
+        "methods"
+      ],
+      "Hash": "b4c06e554f33344e044ccd7fdca750a9"
+    },
     "digest": {
       "Package": "digest",
       "Version": "0.6.31",
