@@ -17,7 +17,7 @@ date-format: "YYYY-MM-DDTHH:mm:ssZ"
 #| include: false
 #| cache: false
 projectIds <- c("Krems" = "147007")
-obsResults <- loadObs(projectId)
+obsResults <- loadObs(projectIds)
 ```
 
 {{< include _body.qmd >}}
