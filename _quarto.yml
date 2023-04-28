@@ -2,7 +2,7 @@ project:
   type: website
   resources:
     - fonts/*
-  render: [index.qmd, page_*.qmd]
+  render: [index.qmd, page_*.qmd, "!page_demo.qmd"]
 
 website:
   title: "CNC Austria 2023"
