@@ -390,12 +390,12 @@ if(!is.null(obsResults)){
 if(!is.null(obsResults)){
   obsResults |> 
     filter(num_identification_disagreements > 0) |> 
-    select(link = uri_html, "User" = user.name, "Taxa" = scientificName) |>
+    select("Link" = uri_html, "User" = user.name, "Taxa" = scientificName) |>
     datatable(
       rownames = FALSE,
       escape = FALSE,
       options = list(
-        columnDefs = list(list(type = 'html', targets = c(3)))
+        columnDefs = list(list(type = 'html', targets = c(1)))
       )
     )
 } else {
