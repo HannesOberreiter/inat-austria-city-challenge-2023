@@ -2,13 +2,9 @@
 title: "City Nature Challenge 2023: Graz bis Tierwelt Herberstein"
 lang: 'de-AT'
 execute:
-  echo: false
   waring: false
   error: false
 order: 1
-format:
-    html:
-        df-print: paged
 date: last-modified
 date-format: "YYYY-MM-DDTHH:mm:ssZ"
 ---
@@ -16,7 +12,6 @@ date-format: "YYYY-MM-DDTHH:mm:ssZ"
 - [https://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei](hhttps://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei)
 
 {{< include _init.qmd >}}
-
 
 ```{r init}
 #| include: false
