@@ -272,7 +272,7 @@ if(!is.null(obsResults)){
 Nur Beobachtungen zumindest auf Spezies-Ebene und Research-Grade werden gezählt. 
 
 ```{r tableTopObserverSpecies}
-#| label: tbl-topObserver
+#| label: tbl-topObserverSpecies
 #| tbl-cap: Liste der Beobachter/Innen und Anzahl der unterschiedlichen Arten.
 
 if(!is.null(obsResults)){
