@@ -98,6 +98,7 @@ if(!is.null(obsResults)){
     drop_na(location, time_observed_at) |>
     separate(location, c('latitude', 'longitude'), sep = ',', remove = FALSE, convert = TRUE) |>
     mutate(
+      time_observed_at = lubridate::ymd_hms(time_observed_at, tz = "Europe/Vienna", quiet = TRUE),
       label = glue("{user.name} <br/> {scientificName} <br/> {time_observed_at} <br/> <a href='{uri}'>Beobachtung auf iNat</a>"),
       group = lubridate::wday(
         time_observed_at, 
@@ -114,6 +115,7 @@ if(!is.null(obsResults)){
 
 
   for(name in names(mapDfSplit)){
+    if(nrow(mapDfSplit[[name]]) > 0){
     m <- m |>
       addCircleMarkers(
         data = mapDfSplit[[name]],
@@ -124,6 +126,7 @@ if(!is.null(obsResults)){
         group = name,
         clusterOptions = markerClusterOptions()
       )
+    }
   }
   m |>
     addLayersControl(
