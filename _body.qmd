@@ -184,7 +184,6 @@ User (auch bekannt als Birder) **`r isBirder$user.name[1]`** hat `r isBirder$n[1
 ```{r shannonDiversity}
 if(!is.null(obsResults)){
   shannonDiversity <- obsResults |>
-    filter(class == "Insecta") |>
     filter(taxonRank == 'species' | taxonRank == 'subspecies') |>
     add_count(class, name = 'N') |>
     count(scientificName, N) |> 
@@ -203,9 +202,9 @@ if(!is.null(obsResults)){
 
 Die Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index *H`* (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.
 
-In unserem Datensatz können wir den Shannon-Index *H`* für die Ordnung Insecta berechnen: **`r round(shannonDiversity$shannonDiversity[1], 2)`**. Die Anzahl der Arten in dieser Ordnung beträgt **`r shannonDiversity$speciesRichness[1]`**. 
+Als Beispiel können wir mit den iNaturalist Daten und nur Beobachtungen auf zumindest Spezies Niveau den Shannon-Index *H`* berechnen: **`r round(shannonDiversity$shannonDiversity[1], 2)`**. Die Anzahl der Arten beträgt **`r shannonDiversity$speciesRichness[1]`**. 
 
-Zusätzlich können wir mit diesen Kennzahlen den Evenness-Index berechnen, der in unserem Fall **`r round(shannonDiversity$shannonDiversity[1] / log(shannonDiversity$speciesRichness[1]), 2)`** ist.
+Weiters können wir mit diesen zwei Kennzahlen den Evenness-Index berechnen, welcher einen Wert von **`r round(shannonDiversity$shannonDiversity[1] / log(shannonDiversity$speciesRichness[1]), 2)`** ergibt.
 
 ## Top Beobachter/innen
 
