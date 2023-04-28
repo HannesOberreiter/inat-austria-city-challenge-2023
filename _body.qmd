@@ -213,8 +213,7 @@ In dieser Liste werden auch doppelte Beobachtungen gezählt, jedoch sollte dies 
 
 ```{r tableTopObserver}
 #| label: tbl-topObserver
-#| tbl-cap: Beobachter/innen mit den meisten Uploads geordnet nach Anzahl der Beobachtungen.
-#| tbl-colwidths: [10,60]
+#| tbl-cap: Beobachter/innen und deren Uploads geordnet nach Anzahl der Beobachtungen.
 
 if(!is.null(obsResults)){
   obsResults |> 
@@ -226,13 +225,35 @@ if(!is.null(obsResults)){
   print('Noch keine Beobachtungen')
 }
 ```
+
+## Top Beobachter/innen mit den meisten unterschiedlichen Arten
+
+Nur Beobachtungen zumindest auf Spezies-Ebene und Research-Grade werden gezählt. 
+
+```{r tableTopObserverSpecies}
+#| label: tbl-topObserver
+#| tbl-cap: Liste der Beobachter/Innen und Anzahl der unterschiedlichen Arten.
+
+if(!is.null(obsResults)){
+  obsResults |> 
+    filter((taxonRank == 'species' | taxonRank == 'subspecies') & quality_grade == 'research') |>
+    distinct(scientificName, user.id, .keep_all = TRUE) |>
+    count(user.id, user.name) |>
+    arrange(desc(n)) |>
+    select('Uniques [#]' = n, 'User' = user.name) |>
+    datatable(rownames = FALSE)
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
 ## Top Taxa (Spezies-Ebene)
 
 In dieser Liste sind die am häufigsten beobachteten Taxa auf Spezies-Ebene aufgeführt, die bereits identifiziert wurden. Es ist jedoch nicht erforderlich, dass diese von einer zweiten Person bestätigt wurden, um den Forschungsstandard (Research-Grade) zu erreichen.
 
 ```{r tableTopTaxa}
 #| label: tbl-topTaxa
-#| tbl-cap: Häufigsten Taxa mit Research-Grade auf Spezies-Ebene geordnet nach Anzahl der Beobachtungen.
+#| tbl-cap: Taxa mit Research-Grade auf Spezies-Ebene geordnet nach Anzahl der Beobachtungen.
 if(!is.null(obsResults)){
   obsResults |> 
     filter(taxonRank == 'species' | taxonRank == 'subspecies') |>
