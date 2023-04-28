@@ -84,12 +84,8 @@ if(!is.null(obsResults)){
 #| fig-cap: Absolute Anzahl der Beobachtungen pro Reich, aufgeteilt in teilnehmende Regionen
 if(!is.null(obsResults)){
   obsResults |> 
-    count(kingdom, project.name) |> 
     drop_na(kingdom) |> 
-    arrange(desc(n)) |>
-    mutate(
-      kingdom = forcats::fct_reorder(kingdom, kingdom, .desc = TRUE)
-    ) |> 
+    count(kingdom, project.name) |> 
     select(n, "Region" = project.name, kingdom) |>
     ggplot() +
       aes(x = kingdom, y = n, fill = Region) +
