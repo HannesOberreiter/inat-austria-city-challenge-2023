@@ -27,7 +27,7 @@ obsResultsList <- list()
 for(i in 1:length(projectIds)){
   tempResult <- loadObs(projectIds[i])
   if(!is.null(tempResult)){
-    write_csv(tempResult, paste0("data/obs_", projectIds[i], ".csv"))
+    write_csv(tempResult, paste0("data/obs_", projectIds[i], ".csv"), quote = "all")
     obsResultsList[[i]] <- tempResult
   }
 }

@@ -14,6 +14,7 @@ library(lubridate)
 library(leaflet)
 library(data.table)
 library(furrr)
+library(purrr)
 
 theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(
@@ -96,7 +97,12 @@ loadObs <- function(projectId, maxLoops = 200){
         obsTempResults <- obsFetch$results |> unnest(c(taxon, user), names_sep = ".")
         aboveId = max(obsTempResults$id)
         obsList[[loopCounter]] <- obsTempResults |>
-          mutate(across(everything(), as.character))
+          mutate(across(everything(), as.character)) |>
+          mutate(
+            # Dirty workaround for later parsing of list
+            identifications = str_replace_all(identifications, "\'", "`"),
+            identifications = str_replace_all(identifications, "\"", "'")
+            )
         
         if(totalResults <= perPage){
           print("No more fetches needed")

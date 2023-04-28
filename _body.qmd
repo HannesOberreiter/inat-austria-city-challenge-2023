@@ -232,7 +232,10 @@ Die erhobenen Beobachtungen werden erst durch die unerschöpfliche Arbeit der Be
 ```{r tableTopIdentifier}
 # This function could (should) be vectorized to speed up the process
 getIdentifierAsVector <- function(identifications, observerId){
-  if(!is.null(identifications) & identifications != 'list()'){
+  if(!is.na(identifications)){
+    if(identifications == 'list()'){
+      return(c(""))
+    }
     parsedList <- eval(parse(text=identifications))
     identifiers <- parsedList$user |>
       as_tibble() |>
@@ -249,6 +252,8 @@ getIdentifierAsVector <- function(identifications, observerId){
     return(c(""))
   }
 }
+
+
 if(!is.null(obsResults)){
   obsResults |>
     mutate(
