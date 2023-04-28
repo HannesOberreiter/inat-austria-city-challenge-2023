@@ -95,6 +95,11 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <script src="site_libs/Proj4Leaflet-1.0.1/proj4leaflet.js"></script>
 <link href="site_libs/rstudio_leaflet-1.3.1/rstudio_leaflet.css" rel="stylesheet">
 <script src="site_libs/leaflet-binding-2.1.2/leaflet.js"></script>
+<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.css" rel="stylesheet">
+<link href="site_libs/leaflet-markercluster-1.0.5/MarkerCluster.Default.css" rel="stylesheet">
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.js"></script>
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.freezable.js"></script>
+<script src="site_libs/leaflet-markercluster-1.0.5/leaflet.markercluster.layersupport.js"></script>
 <link href="site_libs/datatables-css-0.0.0/datatables-crosstalk.css" rel="stylesheet">
 <script src="site_libs/datatables-binding-0.27/datatables.js"></script>
 <link href="site_libs/dt-core-1.12.1/css/jquery.dataTables.min.css" rel="stylesheet">
@@ -236,7 +241,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
     <div>
     <div class="quarto-title-meta-heading">Veröffentlichungsdatum</div>
     <div class="quarto-title-meta-contents">
-      <p class="date">2023-04-28T06:18:43+00:00</p>
+      <p class="date">2023-04-28T08:02:20+00:00</p>
     </div>
   </div>
   
@@ -275,7 +280,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>Insgesamt wurden 1 Beobachtungen von 1 Beobachterinnen und Beobachtern hochgeladen. Das ergibt einen Mittelwert von 1 Beobachtungen pro Beobachter bzw. Beobachterin und einen Median von 1. Auf Spezies-Ebene wurden 0 Beobachtungen hochgeladen.</p>
+<p>Insgesamt wurden 12 Beobachtungen von 5 Beobachterinnen und Beobachtern hochgeladen. Das ergibt einen Mittelwert von 2.4 Beobachtungen pro Beobachter bzw. Beobachterin und einen Median von 1. Auf Spezies-Ebene wurden 6 Beobachtungen hochgeladen.</p>
 <div class="cell">
 <details>
 <summary>Code</summary>
@@ -353,6 +358,14 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>  <span class="fu">print</span>(<span class="st">'Noch keine Beobachtungen'</span>)</span>
 <span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
+<div class="cell-output-display">
+<div id="fig-time" class="quarto-figure quarto-figure-center anchored">
+<figure class="figure">
+<p><img src="page_industrieviertel_files/figure-html/fig-time-1.png" class="img-fluid figure-img" width="672"></p>
+<figcaption class="figure-caption">Abbildung&nbsp;2: In welcher Stunde an welchen Wochentag wie viele Beobachtungen gemacht wurden</figcaption>
+</figure>
+</div>
+</div>
 </div>
 </section>
 <section id="beobachtungskarte" class="level2">
@@ -405,8 +418,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 <div class="cell-output-display">
-<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-15a17c93a864dea1af98" style="width:100%;height:464px;"></div>
-<script type="application/json" data-for="htmlwidget-15a17c93a864dea1af98">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[47.59397,14.12456],8,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addLayersControl","args":[[],["Mo","Di","Mi","Do","Fr","Sa","So"],{"collapsed":false,"autoZIndex":true,"position":"topright"}]}]},"evals":[],"jsHooks":[]}</script>
+<div class="leaflet html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-189113c7edaca8697da7" style="width:100%;height:464px;"></div>
+<script type="application/json" data-for="htmlwidget-189113c7edaca8697da7">{"x":{"options":{"crs":{"crsClass":"L.CRS.EPSG3857","code":null,"proj4def":null,"projectedBounds":null,"options":{}}},"setView":[[47.59397,14.12456],8,[]],"calls":[{"method":"addTiles","args":["https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",null,null,{"minZoom":0,"maxZoom":18,"tileSize":256,"subdomains":"abc","errorTileUrl":"","tms":false,"noWrap":false,"zoomOffset":0,"zoomReverse":false,"opacity":1,"zIndex":1,"detectRetina":false,"attribution":"&copy; <a href=\"https://openstreetmap.org\">OpenStreetMap<\/a> contributors, <a href=\"https://creativecommons.org/licenses/by-sa/2.0/\">CC-BY-SA<\/a>"}]},{"method":"addCircleMarkers","args":[[48.0044453378,48.0042950403,48.0043004241,48.1093984936,48.1093890987,48.1093735884,48.1093194561,48.1093205419,48.1093554525,48.3299985431,48.0523945],[16.2717628106,16.27116099,16.2711801007,16.2762062252,16.2762211654,16.2761606163,16.2762045259,16.276112767,16.2761299499,16.291706802,16.2975033333],10,null,"Fr",{"interactive":true,"className":"","stroke":true,"color":"#03F","weight":5,"opacity":0.5,"fill":true,"fillColor":"#03F","fillOpacity":0.2},{"showCoverageOnHover":true,"zoomToBoundsOnClick":true,"spiderfyOnMaxZoom":true,"removeOutsideVisibleBounds":true,"spiderLegPolylineOptions":{"weight":1.5,"color":"#222","opacity":0.5},"freezeAtZoom":false},null,["Martin A. Prinz <br/> Rheum rhabarbarum <br/> 2023-04-28 08:22:17 <br/> <a href='https://www.inaturalist.org/observations/157021805'>Beobachtung auf iNat<\/a>","Martin A. Prinz <br/> Fagus sylvatica <br/> 2023-04-28 08:21:44 <br/> <a href='https://www.inaturalist.org/observations/157021884'>Beobachtung auf iNat<\/a>","Martin A. Prinz <br/> Syringa vulgaris <br/> 2023-04-28 08:21:24 <br/> <a href='https://www.inaturalist.org/observations/157021905'>Beobachtung auf iNat<\/a>","kathistrannik <br/> Narcissus poeticus <br/> 2023-04-28 08:39:29 <br/> <a href='https://www.inaturalist.org/observations/157023851'>Beobachtung auf iNat<\/a>","kathistrannik <br/> Alliaria petiolata <br/> 2023-04-28 08:40:13 <br/> <a href='https://www.inaturalist.org/observations/157023952'>Beobachtung auf iNat<\/a>","kathistrannik <br/> Actinidiaceae <br/> 2023-04-28 08:41:45 <br/> <a href='https://www.inaturalist.org/observations/157024529'>Beobachtung auf iNat<\/a>","kathistrannik <br/> Phlox subulata <br/> 2023-04-28 08:44:01 <br/> <a href='https://www.inaturalist.org/observations/157028069'>Beobachtung auf iNat<\/a>","kathistrannik <br/> Ribes <br/> 2023-04-28 09:02:29 <br/> <a href='https://www.inaturalist.org/observations/157028623'>Beobachtung auf iNat<\/a>","kathistrannik <br/> Salvia <br/> 2023-04-28 09:04:38 <br/> <a href='https://www.inaturalist.org/observations/157029015'>Beobachtung auf iNat<\/a>","marinaroth11 <br/> Alliaria petiolata <br/> 2023-04-28 09:23:39 <br/> <a href='https://www.inaturalist.org/observations/157030393'>Beobachtung auf iNat<\/a>","tronje <br/> NA <br/> 2023-04-28 09:44:45 <br/> <a href='https://www.inaturalist.org/observations/157033979'>Beobachtung auf iNat<\/a>"],null,["Rheum rhabarbarum","Fagus sylvatica","Syringa vulgaris","Narcissus poeticus","Alliaria petiolata","Actinidiaceae","Phlox subulata","Ribes","Salvia","Alliaria petiolata",null],{"interactive":false,"permanent":false,"direction":"auto","opacity":1,"offset":[0,0],"textsize":"10px","textOnly":false,"className":"","sticky":true},null]},{"method":"addLayersControl","args":[[],["Mo","Di","Mi","Do","Fr","Sa","So"],{"collapsed":false,"autoZIndex":true,"position":"topright"}]}],"limits":{"lat":[48.0042950403,48.3299985431],"lng":[16.27116099,16.2975033333]}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </section>
@@ -439,7 +452,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a>}</span></code><button title="In die Zwischenablage kopieren" class="code-copy-button"><i class="bi"></i></button></pre></div>
 </details>
 </div>
-<p>User (auch bekannt als Birder) NA hat NA Beobachtungen hochgeladen - mehr als jede/r andere. Besonders liebt der User bzw. die Userin NA die Art <em>NA</em>, die er/sie bereits NA Mal hochgeladen hat. Das Taxon mit dem längsten Namen ist <em>NA</em>, das NA Zeichen lang ist.</p>
+<p>User (auch bekannt als Birder) NA hat NA Beobachtungen hochgeladen - mehr als jede/r andere. Besonders liebt der User bzw. die Userin Martin A. Prinz die Art <em>Fagus sylvatica</em>, die er/sie bereits 1 Mal hochgeladen hat. Das Taxon mit dem längsten Namen ist <em>Narcissus poeticus</em>, das 18 Zeichen lang ist.</p>
 </section>
 <section id="diversität-indexes" class="level2">
 <h2 class="anchored" data-anchor-id="diversität-indexes">Diversität Indexes</h2>
@@ -492,8 +505,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-47065ec803697cf11c81" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-47065ec803697cf11c81">{"x":{"filter":"none","vertical":false,"data":[[1],["christian maringer"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-f7666526d558a9d11094" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-f7666526d558a9d11094">{"x":{"filter":"none","vertical":false,"data":[[6,3,1,1,1],["kathistrannik","Martin A. Prinz","christian maringer","tronje","marinaroth11"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -523,8 +536,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-08b0f2b1f8fe5fb46f2d" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-08b0f2b1f8fe5fb46f2d">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-a7b8191f4c8bcd34ba71" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-a7b8191f4c8bcd34ba71">{"x":{"filter":"none","vertical":false,"data":[[2,1,1,1,1,1],["Alliaria petiolata","Fagus sylvatica","Narcissus poeticus","Phlox subulata","Rheum rhabarbarum","Syringa vulgaris"],["Knoblauchsrauke","Rotbuche, Blutbuche","Weiße Narzisse, Dichter-Narzisse","Moos-Phlox","Rhabarber, Gewöhnlicher Rhabarbe...","Gemeiner Flieder"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Beob. [#]<\/th>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":0}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -554,8 +567,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-df16dd6ae79bd9ade248" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-df16dd6ae79bd9ade248">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-c2cd199acee079935df0" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-c2cd199acee079935df0">{"x":{"filter":"none","vertical":false,"data":[["Alliaria petiolata"],["Knoblauchsrauke"],["marinaroth11"]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>User<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -599,7 +612,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-Quality" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="page_industrieviertel_files/figure-html/fig-Quality-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Abbildung&nbsp;2: Verteilung der Beobachtungsqualität auf iNaturalist</figcaption>
+<figcaption class="figure-caption">Abbildung&nbsp;3: Verteilung der Beobachtungsqualität auf iNaturalist</figcaption>
 </figure>
 </div>
 </div>
@@ -646,7 +659,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-Phylum" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="page_industrieviertel_files/figure-html/fig-Phylum-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Abbildung&nbsp;3: Relative und absolute Anzahl der Beobachtungen pro Phylum</figcaption>
+<figcaption class="figure-caption">Abbildung&nbsp;4: Relative und absolute Anzahl der Beobachtungen pro Phylum</figcaption>
 </figure>
 </div>
 </div>
@@ -693,7 +706,7 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div id="fig-Insecta" class="quarto-figure quarto-figure-center anchored">
 <figure class="figure">
 <p><img src="page_industrieviertel_files/figure-html/fig-Insecta-1.png" class="img-fluid figure-img" width="672"></p>
-<figcaption class="figure-caption">Abbildung&nbsp;4: Ordnungen innerhalb der Klasse Insecta und deren relative und absolute Anzahl an Beobachtungen.</figcaption>
+<figcaption class="figure-caption">Abbildung&nbsp;5: Ordnungen innerhalb der Klasse Insecta und deren relative und absolute Anzahl an Beobachtungen.</figcaption>
 </figure>
 </div>
 </div>
@@ -720,8 +733,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-701a90c4e9e4920f22d0" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-701a90c4e9e4920f22d0">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>uri<\/th>\n      <th>User<\/th>\n      <th>Taxa<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-cd58a50aa381ac5f0244" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-cd58a50aa381ac5f0244">{"x":{"filter":"none","vertical":false,"data":[[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>uri<\/th>\n      <th>User<\/th>\n      <th>Taxa<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -753,8 +766,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-233deeda18c50e61bf4e" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-233deeda18c50e61bf4e">{"x":{"filter":"none","vertical":false,"data":[[],[],[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>annex_II_priority<\/th>\n      <th>annex_II<\/th>\n      <th>annex_IV<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-53a6cd322f3f624ebc08" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-53a6cd322f3f624ebc08">{"x":{"filter":"none","vertical":false,"data":[[],[],[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>annex_II_priority<\/th>\n      <th>annex_II<\/th>\n      <th>annex_IV<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":5}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
@@ -781,8 +794,8 @@ pre > code.sourceCode > span > a:first-child::before { text-decoration: underlin
 <div class="quarto-layout-row quarto-layout-valign-top">
 <div class="cell-output-display quarto-layout-cell" style="flex-basis: 100.0%;justify-content: center;">
 
-<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-d07028df96da50f50a83" style="width:100%;height:auto;"></div>
-<script type="application/json" data-for="htmlwidget-d07028df96da50f50a83">{"x":{"filter":"none","vertical":false,"data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>AnnexI<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
+<div class="datatables html-widget html-fill-item-overflow-hidden html-fill-item" id="htmlwidget-7a2bd6b6d08d92fbd529" style="width:100%;height:auto;"></div>
+<script type="application/json" data-for="htmlwidget-7a2bd6b6d08d92fbd529">{"x":{"filter":"none","vertical":false,"data":[[],[],[],[]],"container":"<table class=\"display\">\n  <thead>\n    <tr>\n      <th>Wiss. Name<\/th>\n      <th>Umgangspr. Name<\/th>\n      <th>AnnexI<\/th>\n      <th>Beob. (#)<\/th>\n    <\/tr>\n  <\/thead>\n<\/table>","options":{"columnDefs":[{"className":"dt-right","targets":3}],"order":[],"autoWidth":false,"orderClasses":false}},"evals":[],"jsHooks":[]}</script>
 </div>
 </div>
 </div>
