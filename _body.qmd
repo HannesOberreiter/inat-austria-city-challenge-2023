@@ -22,7 +22,7 @@ if(!is.null(obsResults)){
 }
 ```
 
-Insgesamt wurden `r nrow(obsResults)` Beobachtungen von `r length(distinctObserver)` Beobachterinnen und Beobachtern hochgeladen. Das ergibt einen Mittelwert von `r statsObserver$mean[1]` Beobachtungen pro Beobachter bzw. Beobachterin und einen Median von `r statsObserver$median[1]`. Auf Spezies-Ebene wurden `r length(distinctSpecies)` Beobachtungen hochgeladen.
+Insgesamt wurden **`r nrow(obsResults)`** Beobachtungen von **`r length(distinctObserver)`** Beobachterinnen und Beobachtern hochgeladen. Das ergibt einen Mittelwert von **`r statsObserver$mean[1]`** Beobachtungen pro Beobachter bzw. Beobachterin und einen Median von **`r statsObserver$median[1]`**. Auf Spezies-Ebene wurden **`r length(distinctSpecies)`** Beobachtungen hochgeladen.
 
 ```{r plotUserHistogram}
 #| label: fig-histo
@@ -170,7 +170,7 @@ if(!is.null(obsResults)){
 }
 ```
 
-User (auch bekannt als Birder) `r isBirder$user.name[1]` hat `r isBirder$n[1]` Beobachtungen hochgeladen - mehr als jede/r andere. Besonders liebt der User bzw. die Userin `r mostDuplicatedObservations$user.name[1]` die Art *`r mostDuplicatedObservations$scientificName[1]`*, die er/sie bereits `r mostDuplicatedObservations$n[1]` Mal hochgeladen hat. Das Taxon mit dem längsten Namen ist *`r longestName$scientificName[1]`*, das `r longestName$nameLength[1]` Zeichen lang ist.
+User (auch bekannt als Birder) **`r isBirder$user.name[1]`** hat `r isBirder$n[1]` Vogelbeobachtungen hochgeladen - mehr als jede/r andere. Besonders liebt der User bzw. die Userin **`r mostDuplicatedObservations$user.name[1]`** die Art *`r mostDuplicatedObservations$scientificName[1]`*, die er/sie bereits `r mostDuplicatedObservations$n[1]` Mal hochgeladen hat. Das Taxon mit dem längsten Namen ist **_`r longestName$scientificName[1]`_**, das `r longestName$nameLength[1]` Zeichen lang ist.
 
 ## Diversität Indexes
 
@@ -196,9 +196,9 @@ if(!is.null(obsResults)){
 
 Die Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index *H`* (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.
 
-In unserem Datensatz können wir den Shannon-Index *H`* für die Ordnung Insecta berechnen: `r round(shannonDiversity$shannonDiversity[1], 2)`. Die Anzahl der Arten in dieser Ordnung beträgt `r shannonDiversity$speciesRichness[1]`. 
+In unserem Datensatz können wir den Shannon-Index *H`* für die Ordnung Insecta berechnen: **`r round(shannonDiversity$shannonDiversity[1], 2)`**. Die Anzahl der Arten in dieser Ordnung beträgt **`r shannonDiversity$speciesRichness[1]`**. 
 
-Zusätzlich können wir mit diesen Kennzahlen den Evenness-Index berechnen, der in unserem Fall `r round(shannonDiversity$shannonDiversity[1] / log(shannonDiversity$speciesRichness[1]), 2)` ist.
+Zusätzlich können wir mit diesen Kennzahlen den Evenness-Index berechnen, der in unserem Fall **`r round(shannonDiversity$shannonDiversity[1] / log(shannonDiversity$speciesRichness[1]), 2)`** ist.
 
 ## Top 10 Beobachter/innen
 
