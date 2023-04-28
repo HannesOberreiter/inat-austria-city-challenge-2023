@@ -62,7 +62,7 @@ loadObs <- function(projectId, maxLoops = 200){
       checkIfFileExists <- file.exists(glue("data/obs_{projectId}.csv"))
       if(checkIfFileExists){
         print("File exists, loading from file")
-        obsResults <- read_csv(glue("data/obs_{projectId}.csv"), show_col_types = FALSE)
+        obsResults <- read_csv(glue("data/obs_{projectId}.csv"), show_col_types = FALSE, guess_max = 0)
         return(obsResults)
       }
       apiEndpoint <- "https://api.inaturalist.org/v2/observations"
