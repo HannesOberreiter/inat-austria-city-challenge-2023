@@ -1,5 +1,6 @@
 ```{r}
-nextRender <- lubridate::ymd_hms(Sys.time(), tz = "Europe/Vienna", quiet = TRUE) + lubridate::hours(4)
+nextRender <- (lubridate::now() + lubridate::hours(4)) |> 
+  lubridate::with_tz(tzone = 'Europe/Vienna')
 ```
 
 <small>Hinweis: Die Seite wird circa alle 4 Stunden mit neuen Daten befüllt. Nächstes Update um circa `r nextRender`.</small>
