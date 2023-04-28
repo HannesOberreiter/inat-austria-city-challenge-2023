@@ -70,7 +70,7 @@ if(!is.null(obsResults)){
       nTaxa = n_distinct(scientificName),
       nResearchGrade = sum(quality_grade == "research"),
       ) |>
-    select("Region" = project.name, "BeobachterIn" = nObserver, "Beobachtungen" = nObservations, "Taxa" = nTaxa, "Research Grade" = nResearchGrade) |>
+    select("Region" = project.name, "BeobachterInnen" = nObserver, "Beobachtungen" = nObservations, "Taxa" = nTaxa, "Research Grade" = nResearchGrade) |>
     datatable(rownames = FALSE)
 } else {
   print('Noch keine Beobachtungen')
