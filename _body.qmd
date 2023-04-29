@@ -184,8 +184,8 @@ User (auch bekannt als Birder) **`r isBirder$user.name[1]`** hat `r isBirder$n[1
 ```{r shannonDiversity}
 if(!is.null(obsResults)){
   shannonDiversity <- obsResults |>
-    filter(taxonRank == 'species' | taxonRank == 'subspecies') |>
-    add_count(class, name = 'N') |>
+    filter(taxonRank == 'species' | taxonRank == 'subspecies') %>% # need magritter pipe here otherwise cant use dot notation
+    mutate(N = nrow(.)) |>
     count(scientificName, N) |> 
     mutate(
       relFreq = n / sum(N),
