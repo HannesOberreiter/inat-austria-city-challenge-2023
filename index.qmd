@@ -15,8 +15,6 @@ date-format: "YYYY-MM-DDTHH:mm:ssZ"
 - [https://www.citynaturechallenge.at/](https://www.citynaturechallenge.at/)
 - [inaturalist.org/projects/city-nature-challenges-in-oesterreich-2023](https://www.inaturalist.org/projects/city-nature-challenges-in-oesterreich-2023)
 
-![City Nature Challenge Logo](/assets/logo.png)
-
 {{< include _init.qmd >}}
 
 ```{r init}
