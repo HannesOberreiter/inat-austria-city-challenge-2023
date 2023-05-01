@@ -20,7 +20,7 @@ theme_set(theme_classic(base_size = 12))
 colorBlindBlack8 <- c(
     "#464343", "#E69F00", "#56B4E9", "#009E73",
     "#F0E442", "#0072B2", "#D55E00", "#CC79A7",
-    "#750a0f", "#669c8e"
+    "#750a0f", "#669c8e", "#ffaabb", "#cbbb45"
 )
 options(ggplot2.discrete.colour = colorBlindBlack8)
 options(ggplot2.discrete.fill = colorBlindBlack8)

@@ -37,6 +37,10 @@ website:
             text: "Krems-Wachau-Melk"
           - file: page_wien.qmd
             text: "Wien"
+          - file: page_st-poelten.qmd
+            text: "St.Pölten"
+          - file: page_vorarlberg.qmd
+            text: "Vorarlberg"
       - text: "Nationalparks"
         menu:
           - file: page_nationalpark_gesaeuse.qmd
