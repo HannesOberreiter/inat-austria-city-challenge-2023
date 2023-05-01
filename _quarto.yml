@@ -35,6 +35,8 @@ website:
             text: "Klagenfurt"
           - file: page_krems-wachau-melk.qmd
             text: "Krems-Wachau-Melk"
+          - file: wien.qmd
+            text: "Wien"
       - text: "Nationalparks"
         menu:
           - file: page_nationalpark_gesaeuse.qmd
