@@ -1,0 +1,74 @@
+---
+title: "CNC 2023: Urwaltreliktkäfer"
+lang: 'de-AT'
+bibliography: references.bib
+execute:
+  waring: false
+  error: false
+order: 1
+date: last-modified
+date-format: "YYYY-MM-DDTHH:mm:ssZ"
+---
+
+Liste der Coleoptera Reliktarten beobachtet während dem CNC 2023 für alle Regionen. Artenliste anhand von @eckelt2018.
+
+{{< include _init.qmd >}}
+
+```{r loadRelictSpecies}
+#| include: false
+#! cache: false
+relictSpecies <- read.csv("data/primeval_forest_relict_beetle.csv", sep = ";", stringsAsFactors = FALSE)
+```
+
+
+```{r init}
+#| include: false
+#! cache: false
+projectIds <- c("Amstetten" = "155713", "Graz" = "148063", "Industrieviertel" = "156486", "Innsbruck" = "156501", "Klagenfurt" = "148013", "Krems" = "147007", "Gesäuse" = "148580", "Neusiedlersee" = "154309", "Wien" = "155927", "St.Pölten" = "155916", "Vorarlberg" = "156493")
+obsResultsList <- list()
+for(i in 1:length(projectIds)){
+    tempResult <- loadObs(projectIds[i])
+    obsResultsList[[i]] <- tempResult
+}
+obsResults <- bind_rows(obsResultsList)
+if(nrow(obsResults) == 0){
+  obsResults = NULL
+}
+```
+
+```{r relictTable}
+if(!is.null(obsResults)){
+  obsResults |> 
+    filter((taxonRank == 'species' | taxonRank == 'subspecies')) |>
+    left_join(relictSpecies, by = c('scientificName' = 'Species')) |>
+    filter(!is.na(Category)) |>
+    select(
+        "Link" = uri_html,
+        "Spezies" = scientificName, 
+        "Familie" = Family, 
+        "Kategorie" = Category, 
+        "Region" = project.name, 
+        'Umgangspr. Name' = vernacularName
+        ) |>
+    datatable(
+      rownames = FALSE, 
+      escape = FALSE,
+      filter = list(
+        position = 'bottom',
+        clear = FALSE,
+        plain = TRUE
+     ),
+      options = list(
+        columnDefs = list(list(type = 'html', targets = c(1)))
+      )
+    )
+} else {
+  print('Noch keine Beobachtungen')
+}
+```
+
+
+## References
+
+::: {#refs}
+:::

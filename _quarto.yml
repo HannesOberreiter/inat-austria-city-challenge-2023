@@ -47,7 +47,10 @@ website:
             text: "Gesäuse"
           - file: page_nationalpark_neusiedlersee-seewinkel.qmd
             text: "Neusiedler See - Seewinkel"
-
+      - text: "Analysen"
+        menu:
+          - file: page_primeval_forest_relict_beetle.qmd
+            text: "Urwaltreliktkäfer"
 format:
   html:
     code-fold: true
