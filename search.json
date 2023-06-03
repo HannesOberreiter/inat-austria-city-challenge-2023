@@ -18,7 +18,7 @@
     "href": "index.html#beobachtungen-regnum",
     "title": "City Nature Challenges in Österreich, 28. April – 1. Mai 2023",
     "section": "Beobachtungen Regnum",
-    "text": "Beobachtungen Regnum\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    drop_na(kingdom) |&gt; \n    count(kingdom, project.name) |&gt; \n    select(n, \"Region\" = project.name, kingdom) |&gt;\n    ggplot() +\n      aes(x = kingdom, y = n, fill = Region) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = TRUE) +\n      labs(\n        y = \"Beobachtungen pro Reich [#]\",\n        x = \"\"\n      ) +\n      scale_y_continuous(\n        labels = scales::label_number(scale_cut = cut_short_scale()),\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 2: Absolute Anzahl der Beobachtungen pro Reich, aufgeteilt in teilnehmende Regionen\n\n\n\n\n\n\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\n\n\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:26:07."
+    "text": "Beobachtungen Regnum\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    drop_na(kingdom) |&gt; \n    count(kingdom, project.name) |&gt; \n    select(n, \"Region\" = project.name, kingdom) |&gt;\n    ggplot() +\n      aes(x = kingdom, y = n, fill = Region) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = TRUE) +\n      labs(\n        y = \"Beobachtungen pro Reich [#]\",\n        x = \"\"\n      ) +\n      scale_y_continuous(\n        labels = scales::label_number(scale_cut = cut_short_scale()),\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 2: Absolute Anzahl der Beobachtungen pro Reich, aufgeteilt in teilnehmende Regionen\n\n\n\n\n\n\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\n\n\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:30:01."
   },
   {
     "objectID": "index.html#allgemeine-information",
@@ -46,7 +46,7 @@
     "href": "index.html#diversität-indexes",
     "title": "City Nature Challenges in Österreich, 28. April – 1. Mai 2023",
     "section": "Diversität Indexes",
-    "text": "Diversität Indexes\n\n\nCode\nif(!is.null(obsResults)){\n  shannonDiversity &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') %&gt;% # need magritter pipe here otherwise cant use dot notation\n    mutate(N = nrow(.)) |&gt;\n    count(scientificName, N) |&gt; \n    mutate(\n      relFreq = n / sum(N),\n      logRelFreq = log(relFreq)\n    ) |&gt; \n    summarise(\n      shannonDiversity = -sum(relFreq * logRelFreq),\n      speciesRichness = first(N)\n    )\n} else {\n  shannonDiversity &lt;- tibble(shannonDiversity = c(0), speciesRichness = c(0))\n}\n\n\nDie Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index H` (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.\nAls Beispiel können wir mit den iNaturalist Daten und nur Beobachtungen auf zumindest Spezies Niveau den Shannon-Index H` berechnen: 0. Die Anzahl der Arten beträgt 45488.\nWeiters können wir mit diesen zwei Kennzahlen den Evenness-Index berechnen, welcher einen Wert von 0 ergibt."
+    "text": "Diversität Indexes\n\n\nCode\nif(!is.null(obsResults)){\n  shannonDiversity &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') %&gt;% # need magritter pipe here otherwise cant use dot notation\n    mutate(N = nrow(.)) |&gt;\n    count(scientificName, N) |&gt; \n    mutate(\n      relFreq = n / sum(N),\n      logRelFreq = log(relFreq)\n    ) |&gt; \n    summarise(\n      shannonDiversity = -sum(relFreq * logRelFreq),\n      speciesRichness = first(N)\n    )\n} else {\n  shannonDiversity &lt;- tibble(shannonDiversity = c(0), speciesRichness = c(0))\n}\n\n\nDie Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index H` (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.\nAls Beispiel können wir mit den iNaturalist Daten und nur Beobachtungen auf zumindest Spezies Niveau den Shannon-Index H` berechnen: 0. Die Anzahl der Arten beträgt 45487.\nWeiters können wir mit diesen zwei Kennzahlen den Evenness-Index berechnen, welcher einen Wert von 0 ergibt."
   },
   {
     "objectID": "index.html#top-beobachterinnen",
@@ -130,7 +130,7 @@
     "href": "page_amstetten.html",
     "title": "City Nature Challenge 2023: Amstetten",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-amstetten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:30:55."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-amstetten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:33:49."
   },
   {
     "objectID": "page_amstetten.html#allgemeine-information",
@@ -235,7 +235,7 @@
     "href": "page_graz.html",
     "title": "City Nature Challenge 2023: Graz bis Tierwelt Herberstein",
     "section": "",
-    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:31:40."
+    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:34:22."
   },
   {
     "objectID": "page_graz.html#allgemeine-information",
@@ -263,7 +263,7 @@
     "href": "page_graz.html#diversität-indexes",
     "title": "City Nature Challenge 2023: Graz bis Tierwelt Herberstein",
     "section": "Diversität Indexes",
-    "text": "Diversität Indexes\n\n\nCode\nif(!is.null(obsResults)){\n  shannonDiversity &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') %&gt;% # need magritter pipe here otherwise cant use dot notation\n    mutate(N = nrow(.)) |&gt;\n    count(scientificName, N) |&gt; \n    mutate(\n      relFreq = n / sum(N),\n      logRelFreq = log(relFreq)\n    ) |&gt; \n    summarise(\n      shannonDiversity = -sum(relFreq * logRelFreq),\n      speciesRichness = first(N)\n    )\n} else {\n  shannonDiversity &lt;- tibble(shannonDiversity = c(0), speciesRichness = c(0))\n}\n\n\nDie Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index H` (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.\nAls Beispiel können wir mit den iNaturalist Daten und nur Beobachtungen auf zumindest Spezies Niveau den Shannon-Index H` berechnen: 0. Die Anzahl der Arten beträgt 24416.\nWeiters können wir mit diesen zwei Kennzahlen den Evenness-Index berechnen, welcher einen Wert von 0 ergibt."
+    "text": "Diversität Indexes\n\n\nCode\nif(!is.null(obsResults)){\n  shannonDiversity &lt;- obsResults |&gt;\n    filter(taxonRank == 'species' | taxonRank == 'subspecies') %&gt;% # need magritter pipe here otherwise cant use dot notation\n    mutate(N = nrow(.)) |&gt;\n    count(scientificName, N) |&gt; \n    mutate(\n      relFreq = n / sum(N),\n      logRelFreq = log(relFreq)\n    ) |&gt; \n    summarise(\n      shannonDiversity = -sum(relFreq * logRelFreq),\n      speciesRichness = first(N)\n    )\n} else {\n  shannonDiversity &lt;- tibble(shannonDiversity = c(0), speciesRichness = c(0))\n}\n\n\nDie Biodiversität in einem Ökosystem kann durch verschiedene Indizes in der Ökologie gemessen werden, einer davon ist der Shannon-Index H` (Shannon-Weaver-Index). Dieser Index misst die Diversität von Arten in einem Ökosystem und liegt zwischen 0 und 1. Je höher der Index, desto größer ist die Diversität bzw. je geringer die Chance, noch einmal die gleiche Art zu entdecken.\nAls Beispiel können wir mit den iNaturalist Daten und nur Beobachtungen auf zumindest Spezies Niveau den Shannon-Index H` berechnen: 0. Die Anzahl der Arten beträgt 24415.\nWeiters können wir mit diesen zwei Kennzahlen den Evenness-Index berechnen, welcher einen Wert von 0 ergibt."
   },
   {
     "objectID": "page_graz.html#top-beobachterinnen",
@@ -340,7 +340,7 @@
     "href": "page_industrieviertel.html",
     "title": "City Nature Challenge 2023: Industrieviertel",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-industrieviertel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:34:30."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-industrieviertel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:36:41."
   },
   {
     "objectID": "page_industrieviertel.html#allgemeine-information",
@@ -445,7 +445,7 @@
     "href": "page_innsbruck.html",
     "title": "City Nature Challenge 2023: Innsbruck",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-innsbruck\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:35:28."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-innsbruck\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:37:26."
   },
   {
     "objectID": "page_innsbruck.html#allgemeine-information",
@@ -550,7 +550,7 @@
     "href": "page_klagenfurt.html",
     "title": "City Nature Challenge 2023: Klagenfurt",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-klagenfurt\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:36:15."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-klagenfurt\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:38:02."
   },
   {
     "objectID": "page_klagenfurt.html#allgemeine-information",
@@ -655,7 +655,7 @@
     "href": "page_krems-wachau-melk.html",
     "title": "City Nature Challenge 2023: Krems - Wachau - Melk",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-krems-wachau-melk\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:37:14."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-krems-wachau-melk\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:38:48."
   },
   {
     "objectID": "page_krems-wachau-melk.html#allgemeine-information",
@@ -760,7 +760,7 @@
     "href": "page_nationalpark_gesaeuse.html",
     "title": "City Nature Challenge 2023: Nationalparkregion Gesäuse",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-nationalparkregion-gesaeuse\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:38:00."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-nationalparkregion-gesaeuse\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:39:24."
   },
   {
     "objectID": "page_nationalpark_gesaeuse.html#allgemeine-information",
@@ -865,7 +865,7 @@
     "href": "page_nationalpark_neusiedlersee-seewinkel.html",
     "title": "City Nature Challenge 2023: Neusiedler See/Seewinkel",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-neusiedler-see-seewinkel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:38:41."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-neusiedler-see-seewinkel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:39:56."
   },
   {
     "objectID": "page_nationalpark_neusiedlersee-seewinkel.html#allgemeine-information",
@@ -984,7 +984,7 @@
     "href": "page_st-poelten.html",
     "title": "City Nature Challenge 2023: St. Pölten",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-st-poelten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:39:57."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-st-poelten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:40:56."
   },
   {
     "objectID": "page_st-poelten.html#allgemeine-information",
@@ -1089,7 +1089,7 @@
     "href": "page_vorarlberg.html",
     "title": "City Nature Challenge 2023: Vorarlberg",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-vorarlberg\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:40:42."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-vorarlberg\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:41:31."
   },
   {
     "objectID": "page_vorarlberg.html#allgemeine-information",
@@ -1194,7 +1194,7 @@
     "href": "page_wien.html",
     "title": "City Nature Challenge 2023: Wien",
     "section": "",
-    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-wien\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 02:41:23."
+    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-wien\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-06-03 14:42:03."
   },
   {
     "objectID": "page_wien.html#allgemeine-information",
