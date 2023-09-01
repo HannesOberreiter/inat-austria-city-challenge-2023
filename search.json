@@ -4,7 +4,7 @@
     "href": "page_wien.html",
     "title": "City Nature Challenge 2023: Wien",
     "section": "",
-    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-wien\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:54:29."
+    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-wien\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:49:58."
   },
   {
     "objectID": "page_wien.html#allgemeine-information",
@@ -109,7 +109,7 @@
     "href": "page_st-poelten.html",
     "title": "City Nature Challenge 2023: St. Pölten",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-st-poelten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:52:33."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-st-poelten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:48:39."
   },
   {
     "objectID": "page_st-poelten.html#allgemeine-information",
@@ -214,7 +214,7 @@
     "href": "page_nationalpark_neusiedlersee-seewinkel.html",
     "title": "City Nature Challenge 2023: Neusiedler See/Seewinkel",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-neusiedler-see-seewinkel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:50:50."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-neusiedler-see-seewinkel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:47:27."
   },
   {
     "objectID": "page_nationalpark_neusiedlersee-seewinkel.html#allgemeine-information",
@@ -319,7 +319,7 @@
     "href": "page_krems-wachau-melk.html",
     "title": "City Nature Challenge 2023: Krems - Wachau - Melk",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-krems-wachau-melk\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:48:52."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-krems-wachau-melk\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:46:09."
   },
   {
     "objectID": "page_krems-wachau-melk.html#allgemeine-information",
@@ -424,7 +424,7 @@
     "href": "page_innsbruck.html",
     "title": "City Nature Challenge 2023: Innsbruck",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-innsbruck\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:46:29."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-innsbruck\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:44:35."
   },
   {
     "objectID": "page_innsbruck.html#allgemeine-information",
@@ -529,7 +529,7 @@
     "href": "page_graz.html",
     "title": "City Nature Challenge 2023: Graz bis Tierwelt Herberstein",
     "section": "",
-    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:41:13."
+    "text": "https://www.inaturalist.org/projects/city-nature-challenge-2023-graz-bis-tierwelt-herberstei\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:41:13."
   },
   {
     "objectID": "page_graz.html#allgemeine-information",
@@ -655,7 +655,7 @@
     "href": "index.html#beobachtungen-regnum",
     "title": "City Nature Challenges in Österreich, 28. April – 1. Mai 2023",
     "section": "Beobachtungen Regnum",
-    "text": "Beobachtungen Regnum\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    drop_na(kingdom) |&gt; \n    count(kingdom, project.name) |&gt; \n    select(n, \"Region\" = project.name, kingdom) |&gt;\n    ggplot() +\n      aes(x = kingdom, y = n, fill = Region) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = TRUE) +\n      labs(\n        y = \"Beobachtungen pro Reich [#]\",\n        x = \"\"\n      ) +\n      scale_y_continuous(\n        labels = scales::label_number(scale_cut = cut_short_scale()),\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 2: Absolute Anzahl der Beobachtungen pro Reich, aufgeteilt in teilnehmende Regionen\n\n\n\n\n\n\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\n\n\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:33:48."
+    "text": "Beobachtungen Regnum\n\n\nCode\nif(!is.null(obsResults)){\n  obsResults |&gt; \n    drop_na(kingdom) |&gt; \n    count(kingdom, project.name) |&gt; \n    select(n, \"Region\" = project.name, kingdom) |&gt;\n    ggplot() +\n      aes(x = kingdom, y = n, fill = Region) +\n      geom_bar(position = 'dodge', stat='identity', show.legend = TRUE) +\n      labs(\n        y = \"Beobachtungen pro Reich [#]\",\n        x = \"\"\n      ) +\n      scale_y_continuous(\n        labels = scales::label_number(scale_cut = cut_short_scale()),\n      ) +\n      coord_flip(clip=\"off\") +\n      theme(\n        panel.grid.major.x = element_line()\n      )\n} else {\n  print('Noch keine Beobachtungen')\n}\n\n\n\n\n\nAbbildung 2: Absolute Anzahl der Beobachtungen pro Reich, aufgeteilt in teilnehmende Regionen\n\n\n\n\n\n\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\n\n\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:36:27."
   },
   {
     "objectID": "index.html#allgemeine-information",
@@ -760,7 +760,7 @@
     "href": "page_amstetten.html",
     "title": "City Nature Challenge 2023: Amstetten",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-amstetten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:40:16."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-amstetten\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:40:35."
   },
   {
     "objectID": "page_amstetten.html#allgemeine-information",
@@ -865,7 +865,7 @@
     "href": "page_industrieviertel.html",
     "title": "City Nature Challenge 2023: Industrieviertel",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-industrieviertel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:45:06."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-industrieviertel\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:43:43."
   },
   {
     "objectID": "page_industrieviertel.html#allgemeine-information",
@@ -970,7 +970,7 @@
     "href": "page_klagenfurt.html",
     "title": "City Nature Challenge 2023: Klagenfurt",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-klagenfurt\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:47:31."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-klagenfurt\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:45:16."
   },
   {
     "objectID": "page_klagenfurt.html#allgemeine-information",
@@ -1075,7 +1075,7 @@
     "href": "page_nationalpark_gesaeuse.html",
     "title": "City Nature Challenge 2023: Nationalparkregion Gesäuse",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-nationalparkregion-gesaeuse\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:49:54."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-nationalparkregion-gesaeuse\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:46:50."
   },
   {
     "objectID": "page_nationalpark_gesaeuse.html#allgemeine-information",
@@ -1194,7 +1194,7 @@
     "href": "page_vorarlberg.html",
     "title": "City Nature Challenge 2023: Vorarlberg",
     "section": "",
-    "text": "inaturalist.org/projects/city-nature-challenge-2023-vorarlberg\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-08-31 14:53:35."
+    "text": "inaturalist.org/projects/city-nature-challenge-2023-vorarlberg\nCode\nnextRender &lt;- (lubridate::now() + lubridate::hours(12)) |&gt; \n  lubridate::with_tz(tzone = 'Europe/Vienna')\nHinweis: Die Seite wird circa alle 12 Stunden mit neuen Daten befüllt. Nächstes Update um circa 2023-09-01 14:49:21."
   },
   {
     "objectID": "page_vorarlberg.html#allgemeine-information",
