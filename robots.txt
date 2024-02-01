@@ -1,1 +1,1 @@
-Sitemap: https://github.com/HannesOberreiter/inat-austria-city-challenge-2023/sitemap.xml
+Sitemap: https://HannesOberreiter.github.io/inat-austria-city-challenge-2023/sitemap.xml
