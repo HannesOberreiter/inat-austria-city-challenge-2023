@@ -2,8 +2,6 @@ name: Quarto rebuild on a CRON Schedule
 
 on:
   workflow_dispatch:
-  schedule:
-    - cron: "0 0 1 * *"
 
 jobs:
   build-deploy:
